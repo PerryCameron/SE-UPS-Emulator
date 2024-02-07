@@ -1,0 +1,100 @@
+@font-face {
+  font-family: "MyWebFont";
+  src: url("../fonts/5x7APC3.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.container {
+  display: flex;
+  position: relative;
+  margin-left: 100px;
+  margin-top: 100px;
+  width: 921px;
+  height: 190px;
+}
+
+.screen-area {
+  font-family: "MyWebFont", sans-serif;
+  text-align: left;
+  font-size: 20px;
+  padding-top: 40px;
+  padding-left: 7px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: greenyellow;
+  box-sizing: border-box;
+  line-height: 1.3;
+  word-spacing: 0px;
+  font-weight: 500; /* Extra bold weight */
+}
+
+.overlay-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+/* light div */
+#child-div1 {
+  width: 290px;
+  height: 100%px;
+  display: flex;
+  /* background: radial-gradient(circle, rgb(230, 102, 102), rgb(243, 166, 166), red); */
+}
+
+/* divs inside of light div */
+
+#left-inner {
+  height: 100%;
+  width: 175px;
+}
+#center-inner {
+  height: 100%;
+  width: 40px;
+}
+#right-inner {
+  width: 75px;
+  height: 100%;
+}
+
+/* divs inside center-inner */
+.light-row {
+  width: 100%;
+}
+
+#child-div2 {
+  width: 365px;
+}
+
+#child-div3 {
+  width: 280px;
+}
+
+.height20 {
+  height: 20px;
+}
+
+.height22 {
+  height: 22px;
+}
+
+.light-green {
+  background: radial-gradient(circle, rgb(62, 233, 94), rgb(20, 179, 57), rgb(11, 92, 25));
+}
+
+.light-off {
+  background: radial-gradient(circle, rgb(64, 65, 65), rgb(34, 34, 34), rgb(3, 3, 3));
+}
+
+.light-orange {
+  background: radial-gradient(circle, rgb(252, 183, 34), rgb(191, 110, 4), rgb(126, 87, 2));
+}
+
+.light-red {
+  background: radial-gradient(circle, rgb(245, 2, 2), rgb(136, 2, 2), rgb(45, 0, 0));
+}
+/* background: radial-gradient(circle, rgb(64, 65, 65), rgb(34, 34, 34), rgb(3, 3, 3)); */

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PX1 Display Emulator</title>
+    <link rel="stylesheet" href="css/styles.css" type="text/css" />
+    <link rel="stylesheet" href="css/normalize.css" type="text/css" />
+    <script src="js/apc-display.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="child-div" id="child-div1">
+        <div id="left-inner"></div>
+        <div id="center-inner">
+          <div class="light-row height20" id="light1"></div>
+          <div class="light-row height22 light-green" id="light2"></div>
+          <div class="light-row height20" id="light3"></div>
+          <div class="light-row height22 light-off" id="light4"></div>
+          <div class="light-row height20" id="light5"></div>
+          <div class="light-row height22 light-off" id="light6"></div>
+          <div class="light-row height20" id="light7"></div>
+          <div class="light-row height22 light-off" id="light8"></div>
+          <div class="light-row height22" id="light9"></div>
+        </div>
+        <div id="right-inner"></div>
+      </div>
+      <div class="child-div" id="child-div2">
+        <textarea class="screen-area" id="viewscreen"></textarea>
+      </div>
+      <div class="child-div3"></div>
+
+      <img src="images/apc_display2.png" usemap="#image-map" class="overlay-image" alt="APC Display" />
+
+      <map name="image-map">
+        <area
+          alt="Up Button"
+          title="Up Button"
+          href="javascript:void(0)"
+          onclick="upButton()"
+          coords="724,42,713,66,711,88,748,89,787,89,780,59,768,38,750,26,736,28"
+          shape="poly"
+        />
+        <area
+          alt="Down Button"
+          title="Down Button"
+          href="javascript:void(0)"
+          onclick="downButton()"
+          coords="712,104,715,126,724,147,739,161,757,161,773,144,782,123,784,103"
+          shape="poly"
+        />
+        <area
+          alt="Escape Button"
+          title="Escape Button"
+          href="javascript:void(0)"
+          onclick="escapeButton()"
+          coords="848,23,818,24,804,35,801,51,818,60,840,64,865,63,879,51,872,32"
+          shape="poly"
+        />
+        <area
+          alt="Question Button"
+          title="Question Button"
+          href="javascript:void(0)"
+          onclick="questionMarkButton()"
+          coords="804,96,810,82,830,74,851,73,866,77,878,89,876,105,861,112,837,114,815,110"
+          shape="poly"
+        />
+        <area
+          alt="Return Button"
+          title="Return Button"
+          href="javascript:void(0)"
+          onclick="returnButton()"
+          coords="819,133,835,129,853,128,871,135,881,146,876,163,857,168,838,172,818,163,804,153,807,140"
+          shape="poly"
+        />
+      </map>
+    </div>
+  </body>
+</html>
