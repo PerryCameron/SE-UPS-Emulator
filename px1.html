@@ -5,10 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PX1 Display Emulator</title>
     <link rel="stylesheet" href="css/styles.css" type="text/css" />
+    <link rel="stylesheet" href="css/navigation.css" type="text/css" />
     <link rel="stylesheet" href="css/normalize.css" type="text/css" />
-    <script src="js/apc-display.js" defer></script>
+    <script src="js/apc-display-px1.js" defer></script>
   </head>
   <body>
+    <div class="navbar">
+      <div class="dropdown">
+        <button class="dropbtn">
+          APC
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+          <a href="px1.html">PX1</a>
+          <a href="px2.html">PX2</a>
+          <a href="#">SUVT</a> <a href="#">PX2</a>
+          <a href="#">PX250/500</a>
+          <a href="#">MW</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">
+          MGE
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+          <a href="#">Galaxy 4000</a>
+          <a href="#">Galaxy 5000</a>
+          <a href="#">Galaxy PW</a>
+          <a href="#">EPS 6/7/8000</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">
+          SE
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+          <a href="#">VS</a>
+          <a href="#">VM</a>
+          <a href="#">VL</a>
+          <a href="#">VX</a>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <div class="child-div" id="child-div1">
         <div id="left-inner"></div>
@@ -30,7 +71,7 @@
       </div>
       <div class="child-div3"></div>
 
-      <img src="images/apc_display2.png" usemap="#image-map" class="overlay-image" alt="APC Display" />
+      <img src="images/apc_display_px1.png" usemap="#image-map" class="overlay-image" alt="APC Display" />
 
       <map name="image-map">
         <area

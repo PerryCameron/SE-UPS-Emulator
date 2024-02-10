@@ -8,6 +8,15 @@ let menus = {
       3: "Runtime:  1hr  39min",
     },
   },
+  "self-test-started": {
+    type: "information",
+    menu: {
+      0: "Automatic Self Test",
+      1: "Started",
+      2: "",
+      3: "Press any key...",
+    },
+  },
   "top-menu": {
     type: "all-in-one",
     style: "8",
@@ -172,7 +181,7 @@ let menus = {
     menu: "\n SelfTest In Progress\n      On Line\nPlease Wait...",
     message: "\n SelfTest In Progress\n     On Battery\nPlease Wait...",
     duration: "2000",
-    period: "100000",
+    period: "58000",
     action: "selfTest",
   },
   "Yes, UPS Out Of Byp": {
@@ -291,6 +300,7 @@ let screen = [0, 3];
 let toggle = false;
 let isScrollDownMenu = false;
 let inBypass = false;
+let inSelfTest = false;
 let anyKeyPress = false; // when ever it says press any key...
 let cursorPosition = 0;
 let menuSize = 0;
@@ -398,6 +408,8 @@ function handleAnyKeyPress() {
     case "Yes, UPS Out Of Byp":
       setMenu("Control", 2);
       break;
+    default:
+      setMenu("Control", 2);
   }
   console.log("You pressed a key");
   console.log(selectedObject);
@@ -409,24 +421,34 @@ function setEvent() {
   switch (selectedObject["action"]) {
     case "inBypass":
       textarea.value = selectedObject["message"];
-      document.getElementById("light6").classList.remove("light-off");
-      document.getElementById("light6").classList.add("light-orange");
+      changeLight("light-off", "light-orange", "light6");
       inBypass = true;
       anyKeyPress = true;
       break;
     case "outOfBypass":
       textarea.value = selectedObject["message"];
-      document.getElementById("light6").classList.remove("light-orange");
-      document.getElementById("light6").classList.add("light-off");
+      changeLight("light-orange", "light-off", "light6");
       inBypass = false;
       anyKeyPress = true;
       break;
     case "selfTest":
       textarea.value = selectedObject["message"];
-      document.getElementById("light4").classList.remove("light-off");
-      document.getElementById("light4").classList.add("light-orange");
+      changeLight("light-off", "light-orange", "light4");
+      runSelfTest();
       break;
   }
+}
+
+function runSelfTest() {
+  console.log("Running selftest for: " + selectedObject["period"]);
+  inSelfTest = true;
+  setTimeout(() => changeLight("light-orange", "light-off", "light4"), selectedObject["period"]);
+}
+
+function changeLight(changeFrom, changeTo, light) {
+  console.log("Changing " + light + " to " + changeTo);
+  document.getElementById(light).classList.remove(changeFrom);
+  document.getElementById(light).classList.add(changeTo);
 }
 
 function actionEvent() {
@@ -598,9 +620,16 @@ function moveScreen(arrowKey) {
   }
 }
 
+function handleSelfTest() {
+  anyKeyPress = true;
+  selectedObject = menus["self-test-started"];
+  textarea.value = displayScreen();
+}
+
 function escapeButton() {
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
+  if (inSelfTest && lastMenu[menuLevel] === "Yes, Do Self Test") handleSelfTest();
   else {
     cursorPosition = 0;
     switch (menuLevel) {
