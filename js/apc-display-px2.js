@@ -301,12 +301,61 @@ let menuSize = 0;
 let menuLevel = 0;
 let intervalId = null;
 let lastMenu = ["Default", "top-menu", "level 2", "level 3", "level 4", "level 5", "level 6", "level 7"];
-var textarea = document.getElementById("viewscreen");
+// var textarea = document.getElementById("viewscreen");
 let selectedObject = menus["Default"];
+let textarea = document.createElement("textarea");
+textarea.className = "screen-area";
 
 document.addEventListener("DOMContentLoaded", () => {
+  powerOn();
   setMenu(lastMenu[0], 0);
 });
+
+function updateScreen(imageIndex) {
+  const basePath = "../images/dots";
+  const container = document.getElementById("viewscreen-div");
+  container.innerHTML = "";
+  if (imageIndex === 6) {
+    textarea.id = "viewscreen";
+    container.appendChild(textarea);
+    changeLight("light-off", "light-green", "light2");
+    changeLight("light-off", "light-green", "light4");
+  } else {
+    switch (imageIndex) {
+      case 1:
+        changeLight("light-off", "light-green", "light2");
+        break;
+      case 2:
+        changeLight("light-off", "light-orange", "light4");
+        break;
+      case 3:
+        changeLight("light-off", "light-orange", "light6");
+        break;
+      case 4:
+        changeLight("light-off", "light-red", "light8");
+        break;
+      case 5:
+        changeLight("light-green", "light-off", "light2");
+        changeLight("light-orange", "light-off", "light4");
+        changeLight("light-orange", "light-off", "light6");
+        changeLight("light-red", "light-off", "light8");
+        break;
+    }
+    var img = document.createElement("img");
+    img.src = `${basePath}${imageIndex}.png`;
+    img.alt = `Dots ${imageIndex}`;
+    img.className = "screen-area";
+    console.log(img.src);
+    container.appendChild(img);
+  }
+}
+
+function powerOn() {
+  const intervals = [300, 600, 900, 1200, 1500, 1800, 3000];
+  intervals.forEach((interval, index) => {
+    setTimeout(() => updateScreen(index), interval);
+  });
+}
 
 function displayScreen() {
   stopAlternating();
