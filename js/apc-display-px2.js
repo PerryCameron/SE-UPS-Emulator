@@ -8,15 +8,15 @@ let menus = {
       3: " L3: 129    L3: 120",
     },
   },
-  // "self-test-started": {
-  //   type: "information",
-  //   menu: {
-  //     0: "Automatic Self Test",
-  //     1: "Started",
-  //     2: "",
-  //     3: "Press any key...",
-  //   },
-  // },
+  "Not Allowed": {
+    type: "info-any-press",
+    menu: {
+      0: "Command not allowed,",
+      1: "UPS configured to",
+      2: "never shutdown",
+      3: "Press any key...",
+    },
+  },
   "top-menu": {
     type: "all-in-one",
     style: "8",
@@ -30,6 +30,21 @@ let menus = {
       6: "Admin",
       7: "Help",
     },
+  },
+  "Turn UPS Off": {
+    type: "walled-event",
+    check: "upsOffAllowed",
+    menu: { 0: "Not Allowed" },
+  },
+  "Reboot UPS": {
+    type: "walled-event",
+    check: "upsOffAllowed",
+    menu: { 0: "Not Allowed" },
+  },
+  "UPS To Sleep": {
+    type: "walled-event",
+    check: "upsOffAllowed",
+    menu: { 0: "Not Allowed" },
   },
   // Display: {
   //   type: "all-in-one",
@@ -74,18 +89,18 @@ let menus = {
       3: "UPS Configuration",
     },
   },
-  // Status: {
-  //   type: "push-out",
-  //   menu: {
-  //     0: { 0: "Symmetra 40K", 1: "     Output kVA", 2: " $1: 1.30  $2: 0.65", 3: "       $3: 0.89      {" },
-  //     1: { 0: "data-block", 1: "VoltageData" },
-  //     2: { 0: "data-block", 1: "CurrentData" },
-  //     3: "Graceful Reboot",
-  //     4: "Graceful Turn Off",
-  //     5: "Start Runtime Cal",
-  //     6: "Turn Load On/Off",
-  //   },
-  // },
+  "UPS Status": {
+    type: "push-out",
+    menu: {
+      0: { 0: "Symmetra 100K", 1: "Status: On Line, No", 2: " Alarms Present", 3: "                     {" },
+      1: { 0: "data-block", 1: "OutputData" },
+      2: { 0: "data-block", 1: "VoltageData" },
+      3: { 0: "data-block", 1: "CurrentData" },
+      4: { 0: "% load (W/VA) with   ^", 1: "no redundancy", 2: "1  28/31  2  36/38", 3: "3  24/25             {" },
+      5: { 0: "% load (W/VA) with   ^", 1: "n+0 redundancy", 2: "1  28/31  2  36/38", 3: "3  24/25             {" },
+      6: "Turn Load On/Off",
+    },
+  },
   // Diags: {
   //   type: "scroll-down",
   //   menu: {
@@ -227,16 +242,20 @@ let menus = {
   //     dc: "1",
   //   },
   // },
-  // VoltageData: {
-  //   input: { 1: "122.4", 2: "121.9", 3: "122.4" },
-  //   bypass: { 1: "122.1", 2: "121.9", 3: "122.4" },
-  //   output: { 1: "121.0", 2: "121.0", 3: "120.9" },
-  // },
-  // CurrentData: {
-  //   input: { 1: "18.4", 2: "18.5", 3: "18.4" },
-  //   bypass: { 1: "0.0", 2: "0.0", 3: "0.0" },
-  //   output: { 1: "12.6", 2: "12.7", 3: "12.2" },
-  // },
+  VoltageData: {
+    input: { 1: "119.3", 2: "119.3", 3: "121.1" },
+    bypass: { 1: "119.1", 2: "119.2", 3: "121.0" },
+    output: { 1: "121.8", 2: "120.5", 3: "120.9" },
+  },
+  CurrentData: {
+    input: { 1: "47", 2: "48", 3: "48" },
+    bypass: { 1: "0.0", 2: "0.0", 3: "0.0" },
+    output: { 1: "44", 2: "53", 3: "34" },
+    opk: { 1: "74", 2: "84", 3: "56" },
+  },
+  OutputData: {
+    output: { 1: "5.28", 2: "6.47", 3: "4.15" },
+  },
   // "View Network Setup": {
   //   type: "network-setup-display",
   //   menu: "none",
@@ -296,6 +315,7 @@ let isScrollDownMenu = false;
 let inBypass = false;
 let inSelfTest = false;
 let anyKeyPress = false; // when ever it says press any key...
+let upsOffAllowed = false;
 let cursorPosition = 0;
 let menuSize = 0;
 let menuLevel = 0;
@@ -311,51 +331,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setMenu(lastMenu[0], 0);
 });
 
-function updateScreen(imageIndex) {
-  const basePath = "../images/dots";
-  const container = document.getElementById("viewscreen-div");
-  container.innerHTML = "";
-  if (imageIndex === 6) {
-    textarea.id = "viewscreen";
-    container.appendChild(textarea);
-    changeLight("light-off", "light-green", "light2");
-    changeLight("light-off", "light-green", "light4");
-  } else {
-    switch (imageIndex) {
-      case 1:
-        changeLight("light-off", "light-green", "light2");
-        break;
-      case 2:
-        changeLight("light-off", "light-orange", "light4");
-        break;
-      case 3:
-        changeLight("light-off", "light-orange", "light6");
-        break;
-      case 4:
-        changeLight("light-off", "light-red", "light8");
-        break;
-      case 5:
-        changeLight("light-green", "light-off", "light2");
-        changeLight("light-orange", "light-off", "light4");
-        changeLight("light-orange", "light-off", "light6");
-        changeLight("light-red", "light-off", "light8");
-        break;
-    }
-    var img = document.createElement("img");
-    img.src = `${basePath}${imageIndex}.png`;
-    img.alt = `Dots ${imageIndex}`;
-    img.className = "screen-area";
-    console.log(img.src);
-    container.appendChild(img);
-  }
-}
-
-function powerOn() {
-  const intervals = [300, 600, 900, 1200, 1500, 1800, 3000];
-  intervals.forEach((interval, index) => {
-    setTimeout(() => updateScreen(index), interval);
-  });
-}
+// Load the beep sound when the page loads
+window.onload = function () {
+  loadBeepSound("trimbeep.mp3");
+};
 
 function displayScreen() {
   stopAlternating();
@@ -438,25 +417,45 @@ function drawScreen(includeCursor) {
       return pushOutScreen();
     case "editable-choice":
       return editableChoiceScreen();
+    case "walled-event":
+      return walledEvent();
+    // case "info-any-press":
+    //   return infoWithAnyPress();
     default:
       return scrollDownScreen(includeCursor);
   }
 }
 
+function walledEvent() {
+  if (!window[selectedObject["check"]]) setMenu("Not Allowed", 5);
+  anyKeyPress = true;
+  return displayScreen();
+  // else it is allowed and we have to make functionality for this
+}
+
 function handleAnyKeyPress() {
+  console.log("handle any key press");
   switch (lastMenu[menuLevel]) {
-    case "Yes, UPS into Bypass":
-      setMenu("ControlInBypass", 2);
-      break;
-    case "Yes, UPS Out Of Byp":
-      setMenu("Control", 2);
+    // case "Yes, UPS into Bypass":
+    //   console.log("case 1");
+    //   setMenu("ControlInBypass", 2);
+    //   break;
+    // case "Yes, UPS Out Of Byp":
+    //   console.log("case 2");
+    //   setMenu("top-menu", 2);
+    //   break;
+    case "Not Allowed":
+      console.log("got to not allowed");
+      // console.log(lastMenu[menuLevel - 2]);
+      setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
       break;
     default:
-      setMenu("Control", 2);
+      console.log("case 3");
+      setMenu("top-menu", 2);
   }
-  console.log("You pressed a key");
-  console.log(selectedObject);
-  console.log(lastMenu);
+  // console.log("You pressed a key");
+  // console.log(selectedObject);
+  // console.log(lastMenu);
   anyKeyPress = false;
 }
 
@@ -489,7 +488,6 @@ function runSelfTest() {
 }
 
 function changeLight(changeFrom, changeTo, light) {
-  console.log("Changing " + light + " to " + changeTo);
   document.getElementById(light).classList.remove(changeFrom);
   document.getElementById(light).classList.add(changeTo);
 }
@@ -579,18 +577,25 @@ function dataFedScreen() {
   let i = menus[dataMenu]["input"];
   let b = menus[dataMenu]["bypass"];
   let o = menus[dataMenu]["output"];
+  let p = menus[dataMenu]["opk"];
   switch (dataMenu) {
     case "VoltageData":
-      onScreen = "$ Vin   Vbyp  Vout   ^\n";
+      onScreen = "L Vin   Vbyp  Vout   ^\n";
       onScreen += "1 " + i[1] + " " + b[1] + " " + o[1] + "\n";
       onScreen += "2 " + i[2] + " " + b[2] + " " + o[2] + "\n";
       onScreen += "3 " + i[3] + " " + b[3] + " " + o[3] + "  {\n";
       break;
     case "CurrentData":
-      onScreen = "$     Iin    Iout    ^\n";
-      onScreen += "1     " + i[1] + "A  " + o[1] + "A\n";
-      onScreen += "2     " + i[2] + "A  " + o[2] + "A\n";
-      onScreen += "3     " + i[3] + "A  " + o[3] + "A   {\n";
+      onScreen = "L   Iin  Iout  Iopk  ^\n";
+      onScreen += "1    " + i[1] + "    " + o[1] + "    " + p[1] + "\n";
+      onScreen += "2    " + i[2] + "    " + o[2] + "    " + p[2] + "\n";
+      onScreen += "3    " + i[3] + "    " + o[3] + "    " + p[3] + "  {";
+      break;
+    case "OutputData":
+      onScreen = "Output load (kVA)    ^\n";
+      onScreen += "L1:  " + o[1] + "\n";
+      onScreen += "L2:  " + o[2] + "\n";
+      onScreen += "L3:  " + o[3] + "            {";
       break;
   }
   return onScreen;
@@ -765,7 +770,47 @@ function playBeep() {
     });
 }
 
-// Load the beep sound when the page loads
-window.onload = function () {
-  loadBeepSound("trimbeep.mp3");
-};
+function updateScreen(imageIndex) {
+  const basePath = "/../images/dots";
+  const container = document.getElementById("viewscreen-div");
+  container.innerHTML = "";
+  if (imageIndex === 6) {
+    textarea.id = "viewscreen";
+    container.appendChild(textarea);
+    changeLight("light-off", "light-green", "light2");
+    changeLight("light-off", "light-green", "light4");
+  } else {
+    switch (imageIndex) {
+      case 1:
+        changeLight("light-off", "light-green", "light2");
+        break;
+      case 2:
+        changeLight("light-off", "light-orange", "light4");
+        break;
+      case 3:
+        changeLight("light-off", "light-orange", "light6");
+        break;
+      case 4:
+        changeLight("light-off", "light-red", "light8");
+        break;
+      case 5:
+        changeLight("light-green", "light-off", "light2");
+        changeLight("light-orange", "light-off", "light4");
+        changeLight("light-orange", "light-off", "light6");
+        changeLight("light-red", "light-off", "light8");
+        break;
+    }
+    var img = document.createElement("img");
+    img.src = `${basePath}${imageIndex}.png`;
+    img.alt = `Dots ${imageIndex}`;
+    img.className = "screen-area";
+    container.appendChild(img);
+  }
+}
+
+function powerOn() {
+  const intervals = [300, 600, 900, 1200, 1500, 1800, 3000];
+  intervals.forEach((interval, index) => {
+    setTimeout(() => updateScreen(index), interval);
+  });
+}
