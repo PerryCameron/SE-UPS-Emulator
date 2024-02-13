@@ -150,11 +150,11 @@ let menus = {
     },
     menu: {
       0: "Frame: Main",
-      1: "Pwr Mod: ",
-      2: "Status: ",
+      1: "Pwr Mod:",
+      2: "Status:",
       3: "Additional Info",
     },
-    selection: "0",
+    module: "0",
     mode: "0",
   },
   "UPS Into Bypass": {
@@ -215,6 +215,8 @@ let upsOffAllowed = false;
 let cursorPosition = 0;
 let menuSize = 0;
 let menuLevel = 0;
+let preEditMode = false;
+let editMode = false;
 let intervalId = null;
 let lastMenu = ["Default", "top-menu", "level 2", "level 3", "level 4", "level 5", "level 6", "level 7"];
 // var textarea = document.getElementById("viewscreen");
@@ -278,6 +280,7 @@ function stopAlternating() {
 function upButton() {
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
+  else if (editMode) handleEditMode();
   else {
     if (isScrollDownMenu) moveScreen("up"); // virtual screen
     else moveArrow("up");
@@ -287,6 +290,7 @@ function upButton() {
 function downButton() {
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
+  else if (editMode) handleEditMode();
   else {
     if (isScrollDownMenu) moveScreen("down"); // virtual screen of 4 lines
     else moveArrow("down");
@@ -473,7 +477,8 @@ function scrollDownScreen(includeCursor) {
 }
 
 function moduleChooserScreen(includeCursor) {
-  let cursor = [" ", " ", " "];
+  menuSize = 3;
+  let cursor = [" ", " ", " ", " "];
   if (includeCursor) {
     switch (cursorPosition) {
       case screen[0]:
@@ -487,12 +492,18 @@ function moduleChooserScreen(includeCursor) {
         break;
     }
   }
+  let moduleChoice = selectedObject["module"];
+  let module = selectedObject["choice"][moduleChoice];
+
   let onScreen = selectedObject["menu"][screen[0]] + "\n";
-  onScreen += cursor[0] + selectedObject["menu"][screen[0] + 1] + "\n";
+  onScreen +=
+    cursor[0] + selectedObject["menu"][screen[0] + 1] + cursor[3] + module["mod"] + "of10 " + module["loc"] + "\n";
   onScreen += cursor[1] + selectedObject["menu"][screen[0] + 2] + "\n";
   onScreen += cursor[2] + selectedObject["menu"][screen[0] + 3] + "\n";
   return onScreen;
 }
+
+function handleEditMode() {}
 
 function pushOutScreen() {
   if (selectedObject["menu"][cursorPosition][0] === "data-block") return dataFedScreen();
