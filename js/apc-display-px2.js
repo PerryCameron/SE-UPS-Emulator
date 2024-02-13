@@ -478,6 +478,7 @@ function scrollDownScreen(includeCursor) {
 
 function moduleChooserScreen(includeCursor) {
   menuSize = 3;
+  preEditMode = true;
   let cursor = [" ", " ", " ", " "];
   if (includeCursor) {
     switch (cursorPosition) {
