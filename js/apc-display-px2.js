@@ -46,31 +46,33 @@ let menus = {
     check: "upsOffAllowed",
     menu: { 0: "Not Allowed" },
   },
-  // Display: {
-  //   type: "all-in-one",
-  //   style: "6",
-  //   menu: {
-  //     0: "Date/Time",
-  //     1: "Password",
-  //     2: "Information",
-  //     3: "Beeper",
-  //     4: "Contrast",
-  //     5: "Config",
-  //   },
-  // },
-  // Setup: {
-  //   type: "labeled-all-in-one",
-  //   label: "Settings:",
-  //   menu: {
-  //     0: "Shutdown",
-  //     1: "Defaults",
-  //     2: "Output Freq",
-  //     3: "Alarms",
-  //     4: "Bypass",
-  //     5: "Copy",
-  //     6: "Other",
-  //   },
-  // },
+  "YES, Simulate Fail": {
+    type: "not-yet-available",
+    menu: {
+      0: "Not yet Implemented",
+      1: "For this Emulator",
+      2: "",
+      3: "Press any key...",
+    },
+  },
+  "YES, Do Self Test": {
+    type: "not-yet-available",
+    menu: {
+      0: "Not yet Implemented",
+      1: "For this Emulator",
+      2: "",
+      3: "Press any key...",
+    },
+  },
+  "YES, Start Cal": {
+    type: "not-yet-available",
+    menu: {
+      0: "Not yet Implemented",
+      1: "For this Emulator",
+      2: "",
+      3: "Press any key...",
+    },
+  },
   "UPS Power Control": {
     type: "scroll-down",
     menu: {
@@ -89,6 +91,23 @@ let menus = {
       3: "UPS Configuration",
     },
   },
+  "UPS Tests & Diags": {
+    type: "scroll-down",
+    menu: {
+      0: "Diagnostic Tests",
+      1: "Power Modules",
+      2: "Battery Modules",
+      3: "Other Diagnostics",
+    },
+  },
+  "Diagnostic Tests": {
+    type: "scroll-down",
+    menu: {
+      0: "Simulate Power Fail",
+      1: "Perform Self Test",
+      2: "Start Runtime Cal",
+    },
+  },
   "UPS Status": {
     type: "push-out",
     menu: {
@@ -98,53 +117,46 @@ let menus = {
       3: { 0: "data-block", 1: "CurrentData" },
       4: { 0: "% load (W/VA) with   ^", 1: "no redundancy", 2: "1  28/31  2  36/38", 3: "3  24/25             {" },
       5: { 0: "% load (W/VA) with   ^", 1: "n+0 redundancy", 2: "1  28/31  2  36/38", 3: "3  24/25             {" },
-      6: "Turn Load On/Off",
+      6: { 0: "Frequencies (Hz)     ^", 1: "Input: 60.01", 2: "Output: 60.01", 3: "                     {" },
+      7: { 0: "Battery Voltages     ^", 1: "Nominal: 192.0", 2: "Actual:  216.4", 3: "                     {" },
+      8: { 0: "Battery Modules      ^", 1: "Total: 20  Bad: 0", 2: "Runtime: 28min", 3: "Capacity: 80.4%      {" },
+      9: { 0: "Power Modules        ^", 1: "Total: 5   Bad: 0", 2: "Capacity: 50kVA", 3: "Redundancy: n+3      {" },
+      10: {
+        0: "Last self test       ^",
+        1: "Not Available Unknown",
+        2: "Last calibration",
+        3: "Not Available Unknown{",
+      },
+      11: { 0: "Last transfer cause: ^", 1: "Detection of low", 2: "utility voltage", 3: "" },
     },
   },
-  // Diags: {
-  //   type: "scroll-down",
-  //   menu: {
-  //     0: "Fault & Diagnostics",
-  //     1: "Frame Status",
-  //     2: "Aux. Device Status",
-  //     3: "Comm Bus Status",
-  //   },
-  // },
-  // "Frame Status": {
-  //   type: "scroll-down",
-  //   menu: {
-  //     0: "Main Frame of 2",
-  //     1: "Rev, SN, Mfg Date",
-  //     2: "Sub-Systems",
-  //     3: "Raw Status Data",
-  //   },
-  // },
-  // Other: {
-  //   type: "scroll-down",
-  //   menu: {
-  //     0: "Self Test: Disabled",
-  //     1: "UPS ID: CCC_PX",
-  //     2: "VoutReporting: AUTO",
-  //     3: "Output: 208V       {",
-  //   },
-  //   selfTest: { 0: "At PwrOn", 1: "7 days", 2: "14 days", 3: "disabled" },
-  // },
-  // "UPS into Bypass": {
-  //   type: "labeled-two-choice",
-  //   label: "Confirm:\n UPS into Bypass",
-  //   menu: {
-  //     0: "Cancel",
-  //     1: "Yes, UPS into Bypass",
-  //   },
-  // },
-  // "UPS out of Bypass": {
-  //   type: "labeled-two-choice",
-  //   label: "Confirm:\n UPS Out Of Bypass",
-  //   menu: {
-  //     0: "Cancel",
-  //     1: "Yes, UPS Out Of Byp",
-  //   },
-  // },
+  "NO, ABORT": {
+    type: "abort",
+    menu: { 0: "" },
+  },
+  "Power Modules": {
+    type: "module-chooser",
+    choice: {
+      0: { mod: "1", loc: "L2", Status: "Not Installed", FW: "", HW: "", SN: "", MDATE: "" },
+      1: { mod: "2", loc: "L3", Status: "Not Installed", FW: "", HW: "", SN: "", MDATE: "" },
+      2: { mod: "3", loc: "L4", Status: "Not Installed", FW: "", HW: "", SN: "", MDATE: "" },
+      3: { mod: "4", loc: "L5", Status: "Not Installed", FW: "", HW: "", SN: "", MDATE: "" },
+      4: { mod: "5", loc: "L6", Status: "Not Installed", FW: "", HW: "", SN: "", MDATE: "" },
+      5: { mod: "6", loc: "L7", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240147", MDATE: "09/14/23" },
+      6: { mod: "7", loc: "L8", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240141", MDATE: "09/14/23" },
+      7: { mod: "8", loc: "L9", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240142", MDATE: "09/14/23" },
+      8: { mod: "9", loc: "L10", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240143", MDATE: "09/14/23" },
+      9: { mod: "10", loc: "L11", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240144", MDATE: "09/14/23" },
+    },
+    menu: {
+      0: "Frame: Main",
+      1: "Pwr Mod: ",
+      2: "Status: ",
+      3: "Additional Info",
+    },
+    selection: "0",
+    mode: "0",
+  },
   "UPS Into Bypass": {
     type: "labeled-two-choice",
     label: "Confirm:\n UPS Into Bypass?",
@@ -153,95 +165,30 @@ let menus = {
       1: "YES, Into Bypass",
     },
   },
-  // Password: {
-  //   type: "labeled-two-choice",
-  //   label: "Password:\n ('_'= end)",
-  //   menu: {
-  //     0: "Timeout: Forever",
-  //     1: "Invalidate NOW",
-  //   },
-  // },
-  // "Date/Time": {
-  //   type: "editable-choice",
-  //   subType: "date-time",
-  //   label: "Confirm:\n Do Self Test",
-  //   menu: {
-  //     0: "Date:",
-  //     1: "Time:",
-  //     choices: {
-  //       date: { 0: "14", 1: "Sep", 2: "2024" },
-  //       time: { 0: "10", 1: "19", 2: "50" },
-  //     },
-  //   },
-  // },
-  // Cancel: {
-  //   type: "cancel",
-  //   menu: "none",
-  // },
-  // "Yes, UPS into Bypass": {
-  //   type: "action-event",
-  //   menu: "\n Bypass attempted\n\nPlease Wait...",
-  //   message: "\n  UPS IS BYPASSED\n\nPress any key...",
-  //   duration: "1500",
-  //   action: "inBypass",
-  // },
-  // "Yes, Do Self Test": {
-  //   type: "action-event",
-  //   menu: "\n SelfTest In Progress\n      On Line\nPlease Wait...",
-  //   message: "\n SelfTest In Progress\n     On Battery\nPlease Wait...",
-  //   duration: "2000",
-  //   period: "58000",
-  //   action: "selfTest",
-  // },
-  // "Yes, UPS Out Of Byp": {
-  //   type: "action-event",
-  //   menu: " Attempting to exit\n        bypass\n\nPlease Wait...",
-  //   message: "\n UPS IS OUT OF BYPASS\n\nPress any key...",
-  //   duration: "1500",
-  //   action: "outOfBypass",
-  // },
-  // "Raw Status Data": {
-  //   type: "scroll-down",
-  //   menu: {
-  //     0: "Intelligence Module",
-  //     1: "Redundant Intel Mod",
-  //     2: "Power Modules",
-  //     3: "Sys Power Supplies",
-  //     4: "Power Modules",
-  //   },
-  // },
-  // NetworkData: {
-  //   type: "data",
-  //   IP: { aa: "0", ab: "1", ac: "0", ba: "2", bb: "1", bc: "8", ca: "0", cb: "4", cc: "4", da: "1", db: "4", dc: "4" },
-  //   Mask: {
-  //     aa: "2",
-  //     ab: "5",
-  //     ac: "5",
-  //     ba: "2",
-  //     bb: "5",
-  //     bc: "5",
-  //     ca: "2",
-  //     cb: "5",
-  //     cc: "2",
-  //     da: "0",
-  //     db: "0",
-  //     dc: "0",
-  //   },
-  //   Gway: {
-  //     aa: "0",
-  //     ab: "1",
-  //     ac: "0",
-  //     ba: "1",
-  //     bb: "1",
-  //     bc: "8",
-  //     ca: "0",
-  //     cb: "4",
-  //     cc: "4",
-  //     da: "0",
-  //     db: "0",
-  //     dc: "1",
-  //   },
-  // },
+  "Simulate Power Fail": {
+    type: "labeled-two-choice",
+    label: "Confirm:\n Simulate Power Fail?",
+    menu: {
+      0: "NO, ABORT",
+      1: "YES, Simulate Fail",
+    },
+  },
+  "Perform Self Test": {
+    type: "labeled-two-choice",
+    label: "Confirm:\n Perform Self Test?",
+    menu: {
+      0: "NO, ABORT",
+      1: "YES, Do Self Test",
+    },
+  },
+  "Start Runtime Cal": {
+    type: "labeled-two-choice",
+    label: "Confirm:\n Start Runtime Cal?",
+    menu: {
+      0: "NO, ABORT",
+      1: "YES, Start Cal",
+    },
+  },
   VoltageData: {
     input: { 1: "119.3", 2: "119.3", 3: "121.1" },
     bypass: { 1: "119.1", 2: "119.2", 3: "121.0" },
@@ -256,57 +203,6 @@ let menus = {
   OutputData: {
     output: { 1: "5.28", 2: "6.47", 3: "4.15" },
   },
-  // "View Network Setup": {
-  //   type: "network-setup-display",
-  //   menu: "none",
-  //   label: "Network Setup",
-  //   dataSource: "NetworkData",
-  // },
-  // "Intelligence Module": {
-  //   type: "labeled-two-choice",
-  //   label: "Status: On & OK",
-  //   menu: {
-  //     0: "Rev, SN, Mfg Date",
-  //     1: "Raw Status Data",
-  //   },
-  // },
-  // Accessories: {
-  //   type: "labeled-two-choice",
-  //   label: "    Network Card",
-  //   menu: {
-  //     0: "View Network Setup",
-  //     1: "Network Setup",
-  //   },
-  // },
-  // Information: {
-  //   type: "information",
-  //   menu: {
-  //     0: "Model #: AP9215RM",
-  //     1: "SN: JB23453193849",
-  //     2: "Mfg Date: 14-Sep-2018",
-  //     3: "Revs:HW=b3    FW=0014",
-  //   },
-  // },
-  // Beeper: {
-  //   type: "information",
-  //   menu: {
-  //     0: " ------- Beep -------",
-  //     1: " >At UPS: Never",
-  //     2: "  At Disp: PwrFail+30",
-  //     3: "  Vol: Off Click: On",
-  //   },
-  //   volume: { 0: "Off", 1: "Low", 2: "Med", 3: "Hi" },
-  //   click: { 0: "On", 1: "Off" },
-  // },
-  // Contrast: {
-  //   type: "information",
-  //   menu: {
-  //     0: "",
-  //     1: ">Contrast: 0",
-  //     2: "",
-  //     3: "",
-  //   },
-  // },
 };
 
 let screen = [0, 3];
@@ -419,6 +315,12 @@ function drawScreen(includeCursor) {
       return editableChoiceScreen();
     case "walled-event":
       return walledEvent();
+    case "abort":
+      return abortAction();
+    case "not-yet-available":
+      return notAvailableYetScreen();
+    case "module-chooser":
+      return moduleChooserScreen(includeCursor);
     // case "info-any-press":
     //   return infoWithAnyPress();
     default:
@@ -446,7 +348,6 @@ function handleAnyKeyPress() {
     //   break;
     case "Not Allowed":
       console.log("got to not allowed");
-      // console.log(lastMenu[menuLevel - 2]);
       setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
       break;
     default:
@@ -511,6 +412,13 @@ function editableChoiceScreen() {
   return onScreen;
 }
 
+function notAvailableYetScreen() {
+  anyKeyPress = 1;
+  console.log("notAvailableYetScreen()");
+  console.log(selectedObject);
+  return displayScreen();
+}
+
 function displayNetworkSetupScreen() {
   stopAlternating();
   let d = menus[selectedObject["dataSource"]];
@@ -558,7 +466,31 @@ function scrollDownScreen(includeCursor) {
   let onScreen = cursor[0] + selectedObject["menu"][screen[0]] + "\n";
   onScreen += cursor[1] + selectedObject["menu"][screen[0] + 1] + "\n";
   onScreen += cursor[2] + selectedObject["menu"][screen[0] + 2] + "\n";
-  onScreen += cursor[3] + selectedObject["menu"][screen[0] + 3] + "\n";
+  if (selectedObject["menu"][screen[0] + 3] != undefined)
+    onScreen += cursor[3] + selectedObject["menu"][screen[0] + 3] + "\n";
+  else onScreen += "";
+  return onScreen;
+}
+
+function moduleChooserScreen(includeCursor) {
+  let cursor = [" ", " ", " "];
+  if (includeCursor) {
+    switch (cursorPosition) {
+      case screen[0]:
+        cursor[0] = ">";
+        break;
+      case screen[0] + 1:
+        cursor[1] = ">";
+        break;
+      case screen[0] + 2:
+        cursor[2] = ">";
+        break;
+    }
+  }
+  let onScreen = selectedObject["menu"][screen[0]] + "\n";
+  onScreen += cursor[0] + selectedObject["menu"][screen[0] + 1] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][screen[0] + 2] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][screen[0] + 3] + "\n";
   return onScreen;
 }
 
@@ -642,6 +574,11 @@ function moveArrow(arrowKey) {
       if (cursorPosition < menuSize - 1) cursorPosition++;
       break;
   }
+}
+
+function abortAction() {
+  setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
+  return "";
 }
 
 function moveScreen(arrowKey) {
