@@ -148,14 +148,23 @@ let menus = {
       8: { mod: "9", loc: "L10", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240143", mdate: "09/14/23" },
       9: { mod: "10", loc: "L11", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240144", mdate: "09/14/23" },
     },
+    label: "Frame: Main",
     menu: {
-      0: "Frame: Main",
-      1: "Pwr Mod:",
-      2: "Status:",
-      3: "Additional Info",
+      0: "Pwr Mod:",
+      1: "Status:",
+      2: "Additional Info",
     },
     module: "0",
     mode: "0",
+  },
+  "Additional Info": {
+    type: "labeled-two-choice",
+    label: "Frame Main:\n Pwr Mod: ",
+    data: "Power Modules",
+    menu: {
+      0: "Manufacturing Data",
+      1: "Raw Status Data",
+    },
   },
   "UPS Into Bypass": {
     type: "labeled-two-choice",
@@ -203,6 +212,10 @@ let menus = {
   OutputData: {
     output: { 1: "5.28", 2: "6.47", 3: "4.15" },
   },
+  "Manufacturing Data": {
+    type: "pm-manufacture-data",
+    menu: "none",
+  },
 };
 
 let screen = [0, 3];
@@ -212,7 +225,11 @@ let inBypass = false;
 let inSelfTest = false;
 let anyKeyPress = false; // when ever it says press any key...
 let upsOffAllowed = false;
+let escapeDisable = false;
+let returnDisable = false;
+let helpDisable = false;
 let cursorPosition = 0;
+let choicePosition = 0;
 let menuSize = 0;
 let menuLevel = 0;
 let preEditMode = false;
@@ -244,7 +261,7 @@ function displayScreen() {
 }
 
 function printMenus() {
-  console.clear();
+  // console.clear();
   console.log("Menu Levels, current: " + menuLevel);
   console.log("0:" + lastMenu[0]);
   console.log("1:" + lastMenu[1]);
@@ -280,7 +297,7 @@ function stopAlternating() {
 function upButton() {
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
-  else if (editMode) handleEditMode();
+  else if (editMode) handleEditMode("up");
   else {
     if (isScrollDownMenu) moveScreen("up"); // virtual screen
     else moveArrow("up");
@@ -290,7 +307,7 @@ function upButton() {
 function downButton() {
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
-  else if (editMode) handleEditMode();
+  else if (editMode) handleEditMode("down");
   else {
     if (isScrollDownMenu) moveScreen("down"); // virtual screen of 4 lines
     else moveArrow("down");
@@ -325,8 +342,8 @@ function drawScreen(includeCursor) {
       return notAvailableYetScreen();
     case "module-chooser":
       return moduleChooserScreen(includeCursor);
-    // case "info-any-press":
-    //   return infoWithAnyPress();
+    case "pm-manufacture-data":
+      return pmManufactureDataScreen();
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -439,9 +456,23 @@ function displayNetworkSetupScreen() {
   return onScreen;
 }
 
+// "Additional Info": {
+//   type: "labeled-two-choice",
+//   label: "Frame Main:\n Pwr Mod: ",
+//   data: "Power Modules",
+//   menu: {
+//     0: "Manufacturing Data",
+//     1: "Raw Status Data",
+//   },
+// },
+
 function labeledTwoChoiceScreen(includeCursor) {
   menuSize = 2;
   let cursor = [" ", " "];
+  if (selectedObject["data"] === "Power Modules") {
+    // creates "Pwr Mod: 8 at L9"  on line 2
+    // do it this way
+  }
   if (includeCursor) cursor[cursorPosition] = ">";
   let onScreen = selectedObject["label"] + "\n";
   onScreen += " " + cursor[0] + selectedObject["menu"][0] + "\n";
@@ -453,58 +484,101 @@ function scrollDownScreen(includeCursor) {
   let cursor = [" ", " ", " ", " "];
   if (includeCursor) {
     switch (cursorPosition) {
-      case screen[0]:
+      case 0:
         cursor[0] = ">";
         break;
-      case screen[0] + 1:
+      case 1:
         cursor[1] = ">";
         break;
-      case screen[0] + 2:
+      case 2:
         cursor[2] = ">";
         break;
-      case screen[0] + 3:
+      case 3:
         cursor[3] = ">";
         break;
     }
   }
-  let onScreen = cursor[0] + selectedObject["menu"][screen[0]] + "\n";
-  onScreen += cursor[1] + selectedObject["menu"][screen[0] + 1] + "\n";
-  onScreen += cursor[2] + selectedObject["menu"][screen[0] + 2] + "\n";
-  if (selectedObject["menu"][screen[0] + 3] != undefined)
-    onScreen += cursor[3] + selectedObject["menu"][screen[0] + 3] + "\n";
+  let onScreen = cursor[0] + selectedObject["menu"][0] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][1] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][2] + "\n";
+  // leaves off option if not there
+  if (selectedObject["menu"][3] != undefined) onScreen += cursor[3] + selectedObject["menu"][3] + "\n";
   else onScreen += "";
+  return onScreen;
+}
+
+// "Power Modules": {
+//   type: "module-chooser",
+//   choice: {
+//     0: { mod: "1", loc: "L2", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
+//     1: { mod: "2", loc: "L3", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
+//     2: { mod: "3", loc: "L4", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
+//     3: { mod: "4", loc: "L5", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
+//     4: { mod: "5", loc: "L6", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
+//     5: { mod: "6", loc: "L7", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240147", mdate: "09/14/23" },
+//     6: { mod: "7", loc: "L8", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240141", mdate: "09/14/23" },
+//     7: { mod: "8", loc: "L9", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240142", mdate: "09/14/23" },
+//     8: { mod: "9", loc: "L10", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240143", mdate: "09/14/23" },
+//     9: { mod: "10", loc: "L11", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240144", mdate: "09/14/23" },
+//   },
+//   menu: {
+//     0: "Frame: Main",
+//     1: "Pwr Mod:",
+//     2: "Status:",
+//     3: "Additional Info",
+//   },
+//   module: "0",
+//   mode: "0",
+// },
+
+function pmManufactureDataScreen() {
+  let moduleNumber = menus["Power Modules"]["module"];
+  let module = menus["Power Modules"]["choice"][moduleNumber];
+  let onScreen = "PM: " + moduleNumber + " Frame: Main\n";
+  onScreen += "FW: " + module["FW"] + "     HW: " + module["HW"] + "\n";
+  onScreen += "SN: " + module["SN"] + "\n";
+  onScreen += "Mfg Date: " + module["mdate"] + "\n";
   return onScreen;
 }
 
 function moduleChooserScreen(includeCursor) {
   menuSize = 3;
-  preEditMode = true;
-  let cursor = [" ", " ", " ", " "];
-  if (includeCursor) {
-    switch (cursorPosition) {
-      case screen[0]:
-        cursor[0] = ">";
-        break;
-      case screen[0] + 1:
-        cursor[1] = ">";
-        break;
-      case screen[0] + 2:
-        cursor[2] = ">";
-        break;
-    }
-  }
   let moduleChoice = selectedObject["module"];
   let module = selectedObject["choice"][moduleChoice];
-
-  let onScreen = selectedObject["menu"][screen[0]] + "\n";
-  onScreen +=
-    cursor[0] + selectedObject["menu"][screen[0] + 1] + cursor[3] + module["mod"] + "of10 " + module["loc"] + "\n";
-  onScreen += cursor[1] + selectedObject["menu"][screen[0] + 2] + "\n";
-  onScreen += cursor[2] + selectedObject["menu"][screen[0] + 3] + "\n";
+  let cursor = [" ", " ", " "];
+  let arrowCursor = [" ", " ", " "];
+  if (includeCursor) {
+    switch (cursorPosition) {
+      case 0:
+        returnDisable = false;
+        preEditMode = true; // probably put to false under escape
+        editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
+        escapeDisable = false;
+        break;
+      case 1:
+        cursor[1] = ">";
+        escapeDisable = true;
+        returnDisable = true;
+        break;
+      case 2:
+        returnDisable = false;
+        preEditMode = false;
+        editMode = false;
+        cursor[2] = ">";
+        escapeDisable = false;
+        break;
+    }
+  } else if (editMode === true) {
+    if (choicePosition > 9) choicePosition = 0; // reset us back around (should be choice length -1)
+    selectedObject["module"] = choicePosition; // choicePosition is global
+    console.log(choicePosition);
+  }
+  let onScreen = selectedObject["label"] + "\n";
+  onScreen += cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + module["mod"] + "of10 " + module["loc"] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][1] + " " + module["Status"] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][2] + "\n";
   return onScreen;
 }
-
-function handleEditMode() {}
 
 function pushOutScreen() {
   if (selectedObject["menu"][cursorPosition][0] === "data-block") return dataFedScreen();
@@ -586,6 +660,27 @@ function moveArrow(arrowKey) {
       if (cursorPosition < menuSize - 1) cursorPosition++;
       break;
   }
+  console.log(
+    "cursor position=" +
+      cursorPosition +
+      " choicePosition=" +
+      choicePosition +
+      " preEditMode=" +
+      preEditMode +
+      " editMode=" +
+      editMode
+  );
+}
+
+function handleEditMode(arrowKey) {
+  switch (arrowKey) {
+    case "up":
+      choicePosition++;
+      break;
+    case "down":
+      if (choicePosition > 0) choicePosition--;
+      break;
+  }
 }
 
 function abortAction() {
@@ -601,7 +696,7 @@ function moveScreen(arrowKey) {
         cursorPosition--;
         if (cursorPosition < screen[0]) {
           screen[0]--;
-          screen[1]--;
+          screen[1]--; // doesn't do anything
         }
       }
       break;
@@ -610,24 +705,27 @@ function moveScreen(arrowKey) {
         cursorPosition++;
         if (cursorPosition > screen[1]) {
           screen[0]++;
-          screen[1]++;
+          screen[1]++; // doesn't do anything
         }
       }
       break;
   }
 }
 
-function handleSelfTest() {
-  anyKeyPress = true;
-  selectedObject = menus["self-test-started"];
-  textarea.value = displayScreen();
-}
+// function handleSelfTest() {
+//   anyKeyPress = true;
+//   selectedObject = menus["self-test-started"];
+//   textarea.value = displayScreen();
+// }
 
 function escapeButton() {
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
-  if (inSelfTest && lastMenu[menuLevel] === "Yes, Do Self Test") handleSelfTest();
+  else if (editMode) backToNormalMode();
+  else if (escapeDisable);
   else {
+    // do nothing
+    // else if (inSelfTest && lastMenu[menuLevel] === "Yes, Do Self Test") handleSelfTest();
     cursorPosition = 0;
     switch (menuLevel) {
       case 0: // to all-in-one menu
@@ -639,10 +737,23 @@ function escapeButton() {
   }
 }
 
+function backToNormalMode() {
+  console.log("Back to normal mode");
+  editMode = false;
+}
+
 function returnButton() {
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
-  else {
+  else if (returnDisable);
+  else if (preEditMode) {
+    editMode = true;
+    preEditMode = false;
+  } else if (editMode) {
+    editMode = false;
+    preEditMode = true;
+  } else {
+    console.log("Went to else: " + selectedObject);
     menuName = selectedObject["menu"][cursorPosition];
     selectedObject = menuName;
     if (menuLevel != 0) setMenu(menuName, menuLevel + 1);
