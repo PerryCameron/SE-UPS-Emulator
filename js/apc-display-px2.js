@@ -80,6 +80,7 @@ let menus = {
       1: "Reboot UPS",
       2: "UPS Into Bypass",
       3: "UPS To Sleep",
+      4: "UPS Out Of Bypass",
     },
   },
   UPS: {
@@ -193,6 +194,14 @@ let menus = {
       1: "YES, Into Bypass",
     },
   },
+  "UPS Out Of Bypass": {
+    type: "labeled-two-choice",
+    label: "Confirm:\n UPS Out Of Bypass?",
+    menu: {
+      0: "NO, ABORT",
+      1: "YES, Out Of Bypass",
+    },
+  },
   "YES, Into Bypass": {
     type: "action-event",
     menu: "Putting UPS into\nbypass.\nPlease Wait...",
@@ -262,7 +271,6 @@ let preEditMode = false;
 let editMode = false;
 let intervalId = null;
 let lastMenu = ["Default", "top-menu", "level 2", "level 3", "level 4", "level 5", "level 6", "level 7"];
-// var textarea = document.getElementById("viewscreen");
 let selectedObject = menus["Default"];
 let textarea = document.createElement("textarea");
 textarea.className = "screen-area";
@@ -308,25 +316,34 @@ function startAlternating() {
   if (intervalId === null) {
     intervalId = setInterval(function () {
       textarea.value = toggle ? drawScreen(true) : drawScreen(false);
+      alternateFunction();
       toggle = !toggle;
     }, 300);
   }
 }
 
-function startLightBlink() {
-  changeLight("light-green", "light-orange", "light2");
-  if (intervalId === null) {
-    intervalId = setInterval(function () {
-      textarea.value = toggle ? drawLight(true, "light2") : drawLight(false, "light2");
-      toggle = !toggle;
-    }, 300);
+function alternateFunction() {
+  if (inBypass) {
+    if (toggle) changeLight("light-orange", "light2");
+    else changeLight("light-off", "light2");
   }
 }
 
-function drawLight(lightIt, light) {
-  if (lightIt) changeLight("light-off", "light-orange", light);
-  else changeLight("light-orange", "light-off", light);
-}
+// function startLightBlink() {
+//   // does not work right with the other toggle
+//   changeLight("light-orange", "light2");
+//   if (lightIntervalId === null) {
+//     lightIntervalId = setInterval(function () {
+//       toggle ? drawLight(true, "light2") : drawLight(false, "light2");
+//       toggle = !toggle;
+//     }, 300);
+//   }
+// }
+
+// function drawLight(lightIt, light) {
+//   if (lightIt) changeLight("light-orange", light);
+//   else changeLight("light-off", light);
+// }
 
 function stopAlternating() {
   if (intervalId != null) {
@@ -365,10 +382,10 @@ function drawScreen(includeCursor) {
       return scrollDownScreen(includeCursor);
     case "labeled-two-choice":
       return labeledTwoChoiceScreen(includeCursor);
-    case "action-event":
-      return actionEvent();
     case "network-setup-display":
       return displayNetworkSetupScreen();
+    case "action-event":
+      return actionEvent();
     case "information":
       return displayScreen();
     case "push-out":
@@ -427,21 +444,20 @@ function handleAnyKeyPress() {
 function setEvent() {
   switch (selectedObject["action"]) {
     case "inBypass":
-      textarea.value = selectedObject["message"];
-      console.log("inBypass set to true");
+      console.log("event into bypass");
+      // textarea.value = selectedObject["message"];
       inBypass = true;
       anyKeyPress = true;
-      startLightBlink();
       break;
     case "outOfBypass":
       textarea.value = selectedObject["message"];
-      changeLight("light-orange", "light-off", "light6");
+      changeLight("light-off", "light6");
       inBypass = false;
       anyKeyPress = true;
       break;
     case "selfTest":
       textarea.value = selectedObject["message"];
-      changeLight("light-off", "light-orange", "light4");
+      changeLight("light-orange", "light4");
       runSelfTest();
       break;
   }
@@ -450,18 +466,20 @@ function setEvent() {
 function runSelfTest() {
   console.log("Running selftest for: " + selectedObject["period"]);
   inSelfTest = true;
-  setTimeout(() => changeLight("light-orange", "light-off", "light4"), selectedObject["period"]);
+  setTimeout(() => changeLight("light-off", "light4"), selectedObject["period"]);
 }
 
-function changeLight(changeFrom, changeTo, light) {
-  // console.log("Changing from " + changeFrom + " to " + changeTo);
-  document.getElementById(light).classList.remove(changeFrom);
+function changeLight(changeTo, light) {
+  document.getElementById(light).classList.remove("light-green");
+  document.getElementById(light).classList.remove("light-off");
+  document.getElementById(light).classList.remove("light-orange");
+  document.getElementById(light).classList.remove("light-red");
   document.getElementById(light).classList.add(changeTo);
 }
 
 function actionEvent() {
-  stopAlternating();
   setTimeout(setEvent, selectedObject["duration"]);
+  if (inBypass) return selectedObject["message"];
   return selectedObject["menu"];
 }
 
@@ -536,7 +554,10 @@ function scrollDownScreen(includeCursor) {
   }
   let onScreen = cursor[0] + selectedObject["menu"][0] + "\n";
   onScreen += cursor[1] + selectedObject["menu"][1] + "\n";
-  onScreen += cursor[2] + selectedObject["menu"][2] + "\n";
+  console.log("selectedObject=" + selectedObject);
+  if (inBypass && selectedObject["menu"][2] === "UPS Into Bypass")
+    onScreen += cursor[2] + selectedObject["menu"][4] + "\n";
+  else onScreen += cursor[2] + selectedObject["menu"][2] + "\n";
   // leaves off option if not there
   if (selectedObject["menu"][3] != undefined) onScreen += cursor[3] + selectedObject["menu"][3] + "\n";
   else onScreen += "";
@@ -856,27 +877,27 @@ function updateScreen(imageIndex) {
   if (imageIndex === 6) {
     textarea.id = "viewscreen";
     container.appendChild(textarea);
-    changeLight("light-off", "light-green", "light2");
-    changeLight("light-off", "light-green", "light4");
+    changeLight("light-green", "light2");
+    changeLight("light-green", "light4");
   } else {
     switch (imageIndex) {
       case 1:
-        changeLight("light-off", "light-green", "light2");
+        changeLight("light-green", "light2");
         break;
       case 2:
-        changeLight("light-off", "light-orange", "light4");
+        changeLight("light-orange", "light4");
         break;
       case 3:
-        changeLight("light-off", "light-orange", "light6");
+        changeLight("light-orange", "light6");
         break;
       case 4:
-        changeLight("light-off", "light-red", "light8");
+        changeLight("light-red", "light8");
         break;
       case 5:
-        changeLight("light-green", "light-off", "light2");
-        changeLight("light-orange", "light-off", "light4");
-        changeLight("light-orange", "light-off", "light6");
-        changeLight("light-red", "light-off", "light8");
+        changeLight("light-off", "light2");
+        changeLight("light-off", "light4");
+        changeLight("light-off", "light6");
+        changeLight("light-off", "light8");
         break;
     }
     var img = document.createElement("img");
