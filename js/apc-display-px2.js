@@ -142,11 +142,23 @@ let menus = {
       2: { mod: "3", loc: "L4", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
       3: { mod: "4", loc: "L5", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
       4: { mod: "5", loc: "L6", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
-      5: { mod: "6", loc: "L7", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240147", mdate: "09/14/23" },
-      6: { mod: "7", loc: "L8", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240141", mdate: "09/14/23" },
-      7: { mod: "8", loc: "L9", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240142", mdate: "09/14/23" },
-      8: { mod: "9", loc: "L10", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240143", mdate: "09/14/23" },
-      9: { mod: "10", loc: "L11", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240144", mdate: "09/14/23" },
+      5: { mod: "6", loc: "L7", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240127", mdate: "09/14/23" },
+      6: { mod: "7", loc: "L8", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240134", mdate: "09/14/23" },
+      7: { mod: "8", loc: "L9", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240147", mdate: "09/14/23" },
+      8: { mod: "9", loc: "L10", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240141", mdate: "09/14/23" },
+      9: { mod: "10", loc: "L11", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240140", mdate: "09/14/23" },
+    },
+    "Raw Status": {
+      0: { mod: "1", RS1: "00 00 00 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
+      1: { mod: "2", RS1: "00 00 00 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
+      2: { mod: "3", RS1: "00 00 00 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
+      3: { mod: "4", RS1: "00 00 00 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
+      4: { mod: "5", RS1: "00 00 00 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
+      5: { mod: "6", RS1: "07 1F 08 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
+      6: { mod: "7", RS1: "07 1F 08 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
+      7: { mod: "8", RS1: "07 1F 08 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
+      8: { mod: "9", RS1: "07 1F 08 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
+      9: { mod: "10", RS1: "07 1F 08 00 00", RS2: "00 00 00 00 00 00", RS3: "00 00 00 00 00" },
     },
     label: "Frame: Main",
     menu: {
@@ -157,9 +169,16 @@ let menus = {
     module: "0",
     mode: "0",
   },
+  "Raw Status Data": {
+    type: "pm-raw-status",
+    menu: {
+      0: "PM:",
+      1: "Raw Status",
+    },
+  },
   "Additional Info": {
     type: "labeled-two-choice",
-    label: "Frame Main:\n Pwr Mod: ",
+    label: "Frame Main:\nPwr Mod: ",
     data: "Power Modules",
     menu: {
       0: "Manufacturing Data",
@@ -173,6 +192,13 @@ let menus = {
       0: "NO, ABORT",
       1: "YES, Into Bypass",
     },
+  },
+  "YES, Into Bypass": {
+    type: "action-event",
+    menu: "Putting UPS into\nbypass.\nPlease Wait...",
+    message: "UPS is now in\nbypass\nPress any key...",
+    duration: "1500",
+    action: "inBypass",
   },
   "Simulate Power Fail": {
     type: "labeled-two-choice",
@@ -287,6 +313,21 @@ function startAlternating() {
   }
 }
 
+function startLightBlink() {
+  changeLight("light-green", "light-orange", "light2");
+  if (intervalId === null) {
+    intervalId = setInterval(function () {
+      textarea.value = toggle ? drawLight(true, "light2") : drawLight(false, "light2");
+      toggle = !toggle;
+    }, 300);
+  }
+}
+
+function drawLight(lightIt, light) {
+  if (lightIt) changeLight("light-off", "light-orange", light);
+  else changeLight("light-orange", "light-off", light);
+}
+
 function stopAlternating() {
   if (intervalId != null) {
     clearInterval(intervalId);
@@ -344,6 +385,8 @@ function drawScreen(includeCursor) {
       return moduleChooserScreen(includeCursor);
     case "pm-manufacture-data":
       return pmManufactureDataScreen();
+    case "pm-raw-status":
+      return pmRawStatusDataScreen();
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -385,9 +428,10 @@ function setEvent() {
   switch (selectedObject["action"]) {
     case "inBypass":
       textarea.value = selectedObject["message"];
-      changeLight("light-off", "light-orange", "light6");
+      console.log("inBypass set to true");
       inBypass = true;
       anyKeyPress = true;
+      startLightBlink();
       break;
     case "outOfBypass":
       textarea.value = selectedObject["message"];
@@ -410,6 +454,7 @@ function runSelfTest() {
 }
 
 function changeLight(changeFrom, changeTo, light) {
+  // console.log("Changing from " + changeFrom + " to " + changeTo);
   document.getElementById(light).classList.remove(changeFrom);
   document.getElementById(light).classList.add(changeTo);
 }
@@ -456,27 +501,18 @@ function displayNetworkSetupScreen() {
   return onScreen;
 }
 
-// "Additional Info": {
-//   type: "labeled-two-choice",
-//   label: "Frame Main:\n Pwr Mod: ",
-//   data: "Power Modules",
-//   menu: {
-//     0: "Manufacturing Data",
-//     1: "Raw Status Data",
-//   },
-// },
-
 function labeledTwoChoiceScreen(includeCursor) {
   menuSize = 2;
+  let moduleNumber = menus["Power Modules"]["module"];
+  let module = menus["Power Modules"]["choice"][moduleNumber];
   let cursor = [" ", " "];
-  if (selectedObject["data"] === "Power Modules") {
-    // creates "Pwr Mod: 8 at L9"  on line 2
-    // do it this way
-  }
   if (includeCursor) cursor[cursorPosition] = ">";
-  let onScreen = selectedObject["label"] + "\n";
-  onScreen += " " + cursor[0] + selectedObject["menu"][0] + "\n";
-  onScreen += " " + cursor[1] + selectedObject["menu"][1];
+  let onScreen = selectedObject["label"];
+  if (selectedObject["data"] === "Power Modules") {
+    onScreen += module["mod"] + " at " + module["loc"];
+  }
+  onScreen += "\n" + cursor[0] + selectedObject["menu"][0] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][1];
   return onScreen;
 }
 
@@ -507,34 +543,20 @@ function scrollDownScreen(includeCursor) {
   return onScreen;
 }
 
-// "Power Modules": {
-//   type: "module-chooser",
-//   choice: {
-//     0: { mod: "1", loc: "L2", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
-//     1: { mod: "2", loc: "L3", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
-//     2: { mod: "3", loc: "L4", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
-//     3: { mod: "4", loc: "L5", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
-//     4: { mod: "5", loc: "L6", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
-//     5: { mod: "6", loc: "L7", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240147", mdate: "09/14/23" },
-//     6: { mod: "7", loc: "L8", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240141", mdate: "09/14/23" },
-//     7: { mod: "8", loc: "L9", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240142", mdate: "09/14/23" },
-//     8: { mod: "9", loc: "L10", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240143", mdate: "09/14/23" },
-//     9: { mod: "10", loc: "L11", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240144", mdate: "09/14/23" },
-//   },
-//   menu: {
-//     0: "Frame: Main",
-//     1: "Pwr Mod:",
-//     2: "Status:",
-//     3: "Additional Info",
-//   },
-//   module: "0",
-//   mode: "0",
-// },
+function pmRawStatusDataScreen() {
+  let moduleNumber = menus["Power Modules"]["module"];
+  let module = menus["Power Modules"]["Raw Status"][moduleNumber];
+  let onScreen = "PM: " + moduleNumber + " Raw Status\n";
+  onScreen += module["RS1"] + "\n";
+  onScreen += module["RS2"] + "\n";
+  onScreen += module["RS3"] + "\n";
+  return onScreen;
+}
 
 function pmManufactureDataScreen() {
   let moduleNumber = menus["Power Modules"]["module"];
   let module = menus["Power Modules"]["choice"][moduleNumber];
-  let onScreen = "PM: " + moduleNumber + " Frame: Main\n";
+  let onScreen = "PM: " + module["mod"] + " Frame: Main\n";
   onScreen += "FW: " + module["FW"] + "     HW: " + module["HW"] + "\n";
   onScreen += "SN: " + module["SN"] + "\n";
   onScreen += "Mfg Date: " + module["mdate"] + "\n";
@@ -552,6 +574,7 @@ function moduleChooserScreen(includeCursor) {
       case 0:
         returnDisable = false;
         preEditMode = true; // probably put to false under escape
+        console.log("editMode=" + editMode + " pre-editMode" + preEditMode);
         editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
         escapeDisable = false;
         break;
@@ -571,7 +594,6 @@ function moduleChooserScreen(includeCursor) {
   } else if (editMode === true) {
     if (choicePosition > 9) choicePosition = 0; // reset us back around (should be choice length -1)
     selectedObject["module"] = choicePosition; // choicePosition is global
-    console.log(choicePosition);
   }
   let onScreen = selectedObject["label"] + "\n";
   onScreen += cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + module["mod"] + "of10 " + module["loc"] + "\n";
@@ -738,7 +760,6 @@ function escapeButton() {
 }
 
 function backToNormalMode() {
-  console.log("Back to normal mode");
   editMode = false;
 }
 
@@ -746,14 +767,12 @@ function returnButton() {
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
   else if (returnDisable);
-  else if (preEditMode) {
+  else if (editMode) {
+    backToNormalMode();
+  } else if (preEditMode) {
     editMode = true;
     preEditMode = false;
-  } else if (editMode) {
-    editMode = false;
-    preEditMode = true;
   } else {
-    console.log("Went to else: " + selectedObject);
     menuName = selectedObject["menu"][cursorPosition];
     selectedObject = menuName;
     if (menuLevel != 0) setMenu(menuName, menuLevel + 1);
