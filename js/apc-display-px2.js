@@ -209,6 +209,13 @@ let menus = {
     duration: "1500",
     action: "inBypass",
   },
+  "YES, Out Of Bypass": {
+    type: "action-event",
+    menu: "Taking UPS out\n of bypass.\nPlease Wait...",
+    message: "UPS is now out\nof bypass\nPress any key...",
+    duration: "1500",
+    action: "outOfBypass",
+  },
   "Simulate Power Fail": {
     type: "labeled-two-choice",
     label: "Confirm:\n Simulate Power Fail?",
@@ -329,22 +336,6 @@ function alternateFunction() {
   }
 }
 
-// function startLightBlink() {
-//   // does not work right with the other toggle
-//   changeLight("light-orange", "light2");
-//   if (lightIntervalId === null) {
-//     lightIntervalId = setInterval(function () {
-//       toggle ? drawLight(true, "light2") : drawLight(false, "light2");
-//       toggle = !toggle;
-//     }, 300);
-//   }
-// }
-
-// function drawLight(lightIt, light) {
-//   if (lightIt) changeLight("light-orange", light);
-//   else changeLight("light-off", light);
-// }
-
 function stopAlternating() {
   if (intervalId != null) {
     clearInterval(intervalId);
@@ -445,12 +436,13 @@ function setEvent() {
   switch (selectedObject["action"]) {
     case "inBypass":
       console.log("event into bypass");
-      // textarea.value = selectedObject["message"];
+      changeLight("light-orange", "light6");
       inBypass = true;
       anyKeyPress = true;
       break;
     case "outOfBypass":
       textarea.value = selectedObject["message"];
+      changeLight("light-green", "light2");
       changeLight("light-off", "light6");
       inBypass = false;
       anyKeyPress = true;
@@ -480,6 +472,7 @@ function changeLight(changeTo, light) {
 function actionEvent() {
   setTimeout(setEvent, selectedObject["duration"]);
   if (inBypass) return selectedObject["message"];
+  else if (!inBypass & (selectedObject["action"] === "outOfBypass")) return selectedObject["message"];
   return selectedObject["menu"];
 }
 
@@ -794,7 +787,11 @@ function returnButton() {
     editMode = true;
     preEditMode = false;
   } else {
-    menuName = selectedObject["menu"][cursorPosition];
+    // some magic in case we are in bypass
+    if (inBypass && selectedObject["menu"][4] === "UPS Out Of Bypass")
+      menuName = selectedObject["menu"][cursorPosition + 2];
+    // this is default
+    else menuName = selectedObject["menu"][cursorPosition];
     selectedObject = menuName;
     if (menuLevel != 0) setMenu(menuName, menuLevel + 1);
   }
