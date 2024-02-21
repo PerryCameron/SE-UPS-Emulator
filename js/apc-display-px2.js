@@ -109,6 +109,26 @@ let menus = {
       2: "Start Runtime Cal",
     },
   },
+  "Other Diagnostics": {
+    type: "scroll-down",
+    menu: {
+      0: "Main Intel Mod",
+      1: "Redundant Intel Mod",
+      2: "Frame Status",
+      3: "Bypass Switch Mod   }",
+      4: "Frame Status",
+    },
+  },
+  "Other Diagnostics": {
+    type: "scroll-down",
+    menu: {
+      0: "Main Intel Mod",
+      1: "Redundant Intel Mod",
+      2: "Frame Status",
+      3: "Bypass Switch Mod   {",
+      4: "Frame Status",
+    },
+  },
   "UPS Status": {
     type: "push-out",
     menu: {
@@ -169,6 +189,62 @@ let menus = {
     },
     module: "0",
     mode: "0",
+  },
+  "Battery Modules": {
+    type: "bat-mon-chooser",
+    menu: {
+      0: "Frame:",
+      1: "Bat Mod:",
+      2: "Status:",
+    },
+    frame: {
+      0: "Main of 2",
+      1: "2 of 2",
+    },
+    "Bat Mod": {
+      0: "NONE",
+      1: "/36 ",
+    },
+  },
+  XR1: {
+    batteries: {
+      1: { sn: "", loc: "L1A", Status: "Not Installed" },
+      2: { sn: "", loc: "L1B", Status: "Not Installed" },
+      3: { sn: "", loc: "L1C", Status: "Not Installed" },
+      4: { sn: "", loc: "L1D", Status: "Not Installed" },
+      5: { sn: "", loc: "L2A", Status: "Not Installed" },
+      6: { sn: "", loc: "L2B", Status: "Not Installed" },
+      7: { sn: "", loc: "L2C", Status: "Not Installed" },
+      8: { sn: "", loc: "L2D", Status: "Not Installed" },
+      9: { sn: "", loc: "L3A", Status: "Not Installed" },
+      10: { sn: "", loc: "L3B", Status: "Not Installed" },
+      11: { sn: "", loc: "L3C", Status: "Not Installed" },
+      12: { sn: "", loc: "L3D", Status: "Not Installed" },
+      13: { sn: "", loc: "L4A", Status: "Not Installed" },
+      14: { sn: "", loc: "L4B", Status: "Not Installed" },
+      15: { sn: "", loc: "L4C", Status: "Not Installed" },
+      16: { sn: "", loc: "L4D", Status: "Not Installed" },
+      17: { sn: "PD1346350212", loc: "L5A", Status: "OK" },
+      18: { sn: "PD2319941331", loc: "L5B", Status: "OK" },
+      19: { sn: "5D2320T37247", loc: "L5C", Status: "OK" },
+      20: { sn: "0H2321L00139", loc: "L5D", Status: "OK" },
+      21: { sn: "5D2320T37212", loc: "L6A", Status: "OK" },
+      22: { sn: "0H2320L00257", loc: "L6B", Status: "OK" },
+      23: { sn: "0H2320L03992", loc: "L6C", Status: "OK" },
+      24: { sn: "0H2320L00253", loc: "L6D", Status: "OK" },
+      25: { sn: "0H2320L00247", loc: "L7A", Status: "OK" },
+      26: { sn: "0H2312L11587", loc: "L7B", Status: "OK" },
+      27: { sn: "5D2320T46970", loc: "L7C", Status: "OK" },
+      28: { sn: "0H2321L00084", loc: "L7D", Status: "OK" },
+      29: { sn: "0H2320L00259", loc: "L8A", Status: "OK" },
+      30: { sn: "0H2321L00167", loc: "L8B", Status: "OK" },
+      31: { sn: "0H2320L00261", loc: "L8C", Status: "OK" },
+      32: { sn: "0H2320L00256", loc: "L8D", Status: "OK" },
+      33: { sn: "0H2320L00252", loc: "L9A", Status: "OK" },
+      34: { sn: "0H2320L00278", loc: "L9B", Status: "OK" },
+      35: { sn: "0H2320L00275", loc: "L9C", Status: "OK" },
+      36: { sn: "0H2320L03993", loc: "L9D", Status: "OK" },
+    },
   },
   "Raw Status Data": {
     type: "pm-raw-status",
@@ -395,6 +471,8 @@ function drawScreen(includeCursor) {
       return pmManufactureDataScreen();
     case "pm-raw-status":
       return pmRawStatusDataScreen();
+    case "bat-mon-chooser":
+      return batMonChooserScreen();
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -423,7 +501,6 @@ function handleAnyKeyPress() {
       setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
       break;
     default:
-      console.log("case 3");
       setMenu("top-menu", 2);
   }
   // console.log("You pressed a key");
@@ -547,7 +624,6 @@ function scrollDownScreen(includeCursor) {
   }
   let onScreen = cursor[0] + selectedObject["menu"][0] + "\n";
   onScreen += cursor[1] + selectedObject["menu"][1] + "\n";
-  console.log("selectedObject=" + selectedObject);
   if (inBypass && selectedObject["menu"][2] === "UPS Into Bypass")
     onScreen += cursor[2] + selectedObject["menu"][4] + "\n";
   else onScreen += cursor[2] + selectedObject["menu"][2] + "\n";
@@ -588,7 +664,6 @@ function moduleChooserScreen(includeCursor) {
       case 0:
         returnDisable = false;
         preEditMode = true; // probably put to false under escape
-        console.log("editMode=" + editMode + " pre-editMode" + preEditMode);
         editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
         escapeDisable = false;
         break;
@@ -615,6 +690,94 @@ function moduleChooserScreen(includeCursor) {
   onScreen += cursor[2] + selectedObject["menu"][2] + "\n";
   return onScreen;
 }
+
+// function batMonChooserScreen() {
+// menuSize = 3;
+// if (includeCursor) {
+//   switch (cursorPosition) {
+//     case 0:
+//       returnDisable = false;
+//       preEditMode = true; // probably put to false under escape
+//       console.log("editMode=" + editMode + " pre-editMode" + preEditMode);
+//       editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
+//       escapeDisable = false;
+//       break;
+//     case 1:
+//       editMode ? (arrowCursor[1] = "}") : (cursor[1] = ">");
+//       escapeDisable = true;
+//       returnDisable = true;
+//       break;
+//     case 2:
+//       returnDisable = false;
+//       preEditMode = false;
+//       editMode = false;
+//       cursor[2] = ">";
+//       escapeDisable = false;
+//       break;
+//   }
+// } else if (editMode === true) {
+//   if (choicePosition > 9) choicePosition = 0; // reset us back around (should be choice length -1)
+//   selectedObject["module"] = choicePosition; // choicePosition is global
+//   }
+
+// }
+
+// "Battery Modules": {
+//   type: "bat-mon-chooser",
+//   menu: {
+//     0: "Frame:",
+//     1: "Bat Mod:",
+//     2: "Status:",
+//   },
+//   frame: {
+//     0: "Main of 2",
+//     1: "2 of 2",
+//   },
+//   "Bat Mod": {
+//     0: "NONE",
+//     1: "/36 ",
+//   },
+// },
+// XR1: {
+//   batteries: {
+//     1: { sn: "", loc: "L1A", Status: "Not Installed" },
+//     2: { sn: "", loc: "L1B", Status: "Not Installed" },
+//     3: { sn: "", loc: "L1C", Status: "Not Installed" },
+//     4: { sn: "", loc: "L1D", Status: "Not Installed" },
+//     5: { sn: "", loc: "L2A", Status: "Not Installed" },
+//     6: { sn: "", loc: "L2B", Status: "Not Installed" },
+//     7: { sn: "", loc: "L2C", Status: "Not Installed" },
+//     8: { sn: "", loc: "L2D", Status: "Not Installed" },
+//     9: { sn: "", loc: "L3A", Status: "Not Installed" },
+//     10: { sn: "", loc: "L3B", Status: "Not Installed" },
+//     11: { sn: "", loc: "L3C", Status: "Not Installed" },
+//     12: { sn: "", loc: "L3D", Status: "Not Installed" },
+//     13: { sn: "", loc: "L4A", Status: "Not Installed" },
+//     14: { sn: "", loc: "L4B", Status: "Not Installed" },
+//     15: { sn: "", loc: "L4C", Status: "Not Installed" },
+//     16: { sn: "", loc: "L4D", Status: "Not Installed" },
+//     17: { sn: "PD1346350212", loc: "L5A", Status: "OK" },
+//     18: { sn: "PD2319941331", loc: "L5B", Status: "OK" },
+//     19: { sn: "5D2320T37247", loc: "L5C", Status: "OK" },
+//     20: { sn: "0H2321L00139", loc: "L5D", Status: "OK" },
+//     21: { sn: "5D2320T37212", loc: "L6A", Status: "OK" },
+//     22: { sn: "0H2320L00257", loc: "L6B", Status: "OK" },
+//     23: { sn: "0H2320L03992", loc: "L6C", Status: "OK" },
+//     24: { sn: "0H2320L00253", loc: "L6D", Status: "OK" },
+//     25: { sn: "0H2320L00247", loc: "L7A", Status: "OK" },
+//     26: { sn: "0H2312L11587", loc: "L7B", Status: "OK" },
+//     27: { sn: "5D2320T46970", loc: "L7C", Status: "OK" },
+//     28: { sn: "0H2321L00084", loc: "L7D", Status: "OK" },
+//     29: { sn: "0H2320L00259", loc: "L8A", Status: "OK" },
+//     30: { sn: "0H2321L00167", loc: "L8B", Status: "OK" },
+//     31: { sn: "0H2320L00261", loc: "L8C", Status: "OK" },
+//     32: { sn: "0H2320L00256", loc: "L8D", Status: "OK" },
+//     33: { sn: "0H2320L00252", loc: "L9A", Status: "OK" },
+//     34: { sn: "0H2320L00278", loc: "L9B", Status: "OK" },
+//     35: { sn: "0H2320L00275", loc: "L9C", Status: "OK" },
+//     36: { sn: "0H2320L03993", loc: "L9D", Status: "OK" },
+//   },
+// },
 
 function pushOutScreen() {
   if (selectedObject["menu"][cursorPosition][0] === "data-block") return dataFedScreen();
