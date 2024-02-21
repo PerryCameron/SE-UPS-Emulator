@@ -74,7 +74,7 @@ let menus = {
     },
   },
   "UPS Power Control": {
-    type: "scroll-down",
+    type: "mode-switch-menu-item",
     menu: {
       0: "Turn UPS Off",
       1: "Reboot UPS",
@@ -102,7 +102,7 @@ let menus = {
     },
   },
   "Diagnostic Tests": {
-    type: "scroll-down",
+    type: "four-scroll",
     menu: {
       0: "Simulate Power Fail",
       1: "Perform Self Test",
@@ -378,7 +378,7 @@ function displayScreen() {
 }
 
 function printMenus() {
-  // console.clear();
+  console.clear();
   console.log("Menu Levels, current: " + menuLevel);
   console.log("0:" + lastMenu[0]);
   console.log("1:" + lastMenu[1]);
@@ -449,8 +449,6 @@ function drawScreen(includeCursor) {
       return scrollDownScreen(includeCursor);
     case "labeled-two-choice":
       return labeledTwoChoiceScreen(includeCursor);
-    case "network-setup-display":
-      return displayNetworkSetupScreen();
     case "action-event":
       return actionEvent();
     case "information":
@@ -473,6 +471,10 @@ function drawScreen(includeCursor) {
       return pmRawStatusDataScreen();
     case "bat-mon-chooser":
       return batMonChooserScreen();
+    case "mode-switch-menu-item":
+      return modeSwitchMenuItemScreen(includeCursor);
+    case "four-scroll":
+      return fourScrollScreen(includeCursor);
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -573,22 +575,6 @@ function notAvailableYetScreen() {
   return displayScreen();
 }
 
-function displayNetworkSetupScreen() {
-  stopAlternating();
-  let d = menus[selectedObject["dataSource"]];
-  let ip = d["IP"];
-  let m = d["Mask"];
-  let g = d["Gway"];
-  let onScreen = "    " + selectedObject["label"] + "\n";
-  onScreen += "   IP:" + ip["aa"] + ip["ab"] + ip["ac"] + "." + ip["ba"] + ip["bb"] + ip["bc"] + ".";
-  onScreen += ip["ca"] + ip["cb"] + ip["cc"] + "." + ip["da"] + ip["db"] + ip["dc"] + "\n";
-  onScreen += " Mask:" + m["aa"] + m["ab"] + m["ac"] + "." + m["ba"] + m["bb"] + m["bc"] + ".";
-  onScreen += m["ca"] + m["cb"] + m["cc"] + "." + m["da"] + m["db"] + m["dc"] + "\n";
-  onScreen += " Gway:" + g["aa"] + g["ab"] + g["ac"] + "." + g["ba"] + g["bb"] + g["bc"] + ".";
-  onScreen += g["ca"] + g["cb"] + g["cc"] + "." + g["da"] + g["db"] + g["dc"] + "\n";
-  return onScreen;
-}
-
 function labeledTwoChoiceScreen(includeCursor) {
   menuSize = 2;
   let moduleNumber = menus["Power Modules"]["module"];
@@ -604,31 +590,59 @@ function labeledTwoChoiceScreen(includeCursor) {
   return onScreen;
 }
 
-function scrollDownScreen(includeCursor) {
-  let cursor = [" ", " ", " ", " "];
+// five or more items
+function selectCursor(includeCursor, cursor) {
   if (includeCursor) {
     switch (cursorPosition) {
-      case 0:
+      case screen[0]:
         cursor[0] = ">";
         break;
-      case 1:
+      case screen[0] + 1:
         cursor[1] = ">";
         break;
-      case 2:
+      case screen[0] + 2:
         cursor[2] = ">";
         break;
-      case 3:
+      case screen[0] + 3:
         cursor[3] = ">";
         break;
     }
   }
-  let onScreen = cursor[0] + selectedObject["menu"][0] + "\n";
-  onScreen += cursor[1] + selectedObject["menu"][1] + "\n";
-  if (inBypass && selectedObject["menu"][2] === "UPS Into Bypass")
-    onScreen += cursor[2] + selectedObject["menu"][4] + "\n";
-  else onScreen += cursor[2] + selectedObject["menu"][2] + "\n";
-  // leaves off option if not there
-  if (selectedObject["menu"][3] != undefined) onScreen += cursor[3] + selectedObject["menu"][3] + "\n";
+}
+
+// changes menu when static switch is on "UPS Power Control"
+function modeSwitchMenuItemScreen(includeCursor) {
+  menuSize = 4;
+  let cursor = [" ", " ", " ", " "];
+  selectCursor(includeCursor, cursor);
+  let onScreen = cursor[0] + selectedObject["menu"][screen[0]] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][screen[0] + 1] + "\n";
+  if (inBypass && selectedObject["menu"][screen[0] + 2] === "UPS Into Bypass")
+    onScreen += cursor[2] + selectedObject["menu"][screen[0] + 4] + "\n";
+  else onScreen += cursor[2] + selectedObject["menu"][screen[0] + 2] + "\n";
+  onScreen += cursor[3] + selectedObject["menu"][screen[0] + 3] + "\n";
+  return onScreen;
+}
+
+// four or more items
+function scrollDownScreen(includeCursor) {
+  let cursor = [" ", " ", " ", " "];
+  selectCursor(includeCursor, cursor);
+  let onScreen = cursor[0] + selectedObject["menu"][screen[0]] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][screen[0] + 1] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][screen[0] + 2] + "\n";
+  onScreen += cursor[3] + selectedObject["menu"][screen[0] + 3] + "\n";
+  return onScreen;
+}
+
+// four or less items
+function fourScrollScreen(includeCursor) {
+  let cursor = [" ", " ", " ", " "];
+  selectCursor(includeCursor, cursor);
+  let onScreen = cursor[0] + selectedObject["menu"][screen[0]] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][screen[0] + 1] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][screen[0] + 2] + "\n";
+  if (selectedObject["menu"][3] != undefined) onScreen += cursor[3] + selectedObject["menu"][screen[0] + 3] + "\n";
   else onScreen += "";
   return onScreen;
 }
@@ -653,6 +667,7 @@ function pmManufactureDataScreen() {
   return onScreen;
 }
 
+// provides funtionality for power module diagnostic tests
 function moduleChooserScreen(includeCursor) {
   menuSize = 3;
   let moduleChoice = selectedObject["module"];
