@@ -205,6 +205,7 @@ let menus = {
       0: "NONE",
       1: "/36 ",
     },
+    module: "0",
   },
   XR1: {
     batteries: {
@@ -443,8 +444,8 @@ function drawScreen(includeCursor) {
   switch (selectedObject["type"]) {
     case "all-in-one":
       return allInOneScreen(includeCursor);
-    case "labeled-all-in-one":
-      return labledAllInOneScreen(includeCursor);
+    // case "labeled-all-in-one":
+    //   return labledAllInOneScreen(includeCursor);
     case "scroll-down":
       return scrollDownScreen(includeCursor);
     case "labeled-two-choice":
@@ -455,8 +456,8 @@ function drawScreen(includeCursor) {
       return displayScreen();
     case "push-out":
       return pushOutScreen();
-    case "editable-choice":
-      return editableChoiceScreen();
+    // case "editable-choice":
+    //   return editableChoiceScreen();
     case "walled-event":
       return walledEvent();
     case "abort":
@@ -470,7 +471,7 @@ function drawScreen(includeCursor) {
     case "pm-raw-status":
       return pmRawStatusDataScreen();
     case "bat-mon-chooser":
-      return batMonChooserScreen();
+      return batMonChooserScreen(includeCursor);
     case "mode-switch-menu-item":
       return modeSwitchMenuItemScreen(includeCursor);
     case "four-scroll":
@@ -697,7 +698,7 @@ function moduleChooserScreen(includeCursor) {
     }
   } else if (editMode === true) {
     if (choicePosition > 9) choicePosition = 0; // reset us back around (should be choice length -1)
-    selectedObject["module"] = choicePosition; // choicePosition is global
+    selectedObject["module"] = choicePosition; // choicePosition is global !!!READ THIS TO UNDERSTAND!!!
   }
   let onScreen = selectedObject["label"] + "\n";
   onScreen += cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + module["mod"] + "of10 " + module["loc"] + "\n";
@@ -706,36 +707,67 @@ function moduleChooserScreen(includeCursor) {
   return onScreen;
 }
 
-// function batMonChooserScreen() {
-// menuSize = 3;
-// if (includeCursor) {
-//   switch (cursorPosition) {
-//     case 0:
-//       returnDisable = false;
-//       preEditMode = true; // probably put to false under escape
-//       console.log("editMode=" + editMode + " pre-editMode" + preEditMode);
-//       editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
-//       escapeDisable = false;
-//       break;
-//     case 1:
-//       editMode ? (arrowCursor[1] = "}") : (cursor[1] = ">");
-//       escapeDisable = true;
-//       returnDisable = true;
-//       break;
-//     case 2:
-//       returnDisable = false;
-//       preEditMode = false;
-//       editMode = false;
-//       cursor[2] = ">";
-//       escapeDisable = false;
-//       break;
-//   }
-// } else if (editMode === true) {
-//   if (choicePosition > 9) choicePosition = 0; // reset us back around (should be choice length -1)
-//   selectedObject["module"] = choicePosition; // choicePosition is global
-//   }
+// "Battery Modules": {
+//   type: "bat-mon-chooser",
+//   menu: {
+//     0: "Frame:",
+//     1: "Bat Mod:",
+//     2: "Status:",
+//   },
+//   frame: {
+//     0: "Main of 2",
+//     1: "2 of 2",
+//   },
+//   "Bat Mod": {
+//     0: "NONE",
+//     1: "/36 ",
+//   },
 
-// }
+//   module: "0",
+// },
+
+// provides functionality for the battery diagnostic tests
+function batMonChooserScreen(includeCursor) {
+  menuSize = 3;
+  // makes sure choicePosition does not go out of range
+  if (editMode === true && choicePosition > 36) choicePosition = 0;
+  let menuSelected = choicePosition % 2 === 0 ? 0 : 1;
+  let frameChoice = selectedObject["frame"][menuSelected];
+  let batteryChoice = selectedObject["Bat Mod"][menuSelected];
+
+  // let module = selectedObject["choice"][moduleChoice];
+  let cursor = [" ", " ", " "];
+  let arrowCursor = [" ", " ", " "];
+  if (includeCursor) {
+    switch (cursorPosition) {
+      case 0:
+        returnDisable = false;
+        preEditMode = true; // probably put to false under escape
+        console.log("editMode=" + editMode + " pre-editMode" + preEditMode + " choicePosition=" + choicePosition);
+        editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
+        escapeDisable = false;
+        break;
+      case 1:
+        editMode ? (arrowCursor[1] = "}") : (cursor[1] = ">");
+        escapeDisable = true;
+        returnDisable = true;
+        break;
+      case 2:
+        returnDisable = false;
+        preEditMode = false;
+        editMode = false;
+        cursor[2] = ">";
+        escapeDisable = false;
+        break;
+    }
+  }
+  let onScreen = cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + frameChoice + "\n";
+  if (batteryChoice !== "NONE")
+    onScreen += cursor[1] + selectedObject["menu"][1] + " " + choicePosition + batteryChoice + "\n";
+  else onScreen += cursor[1] + selectedObject["menu"][1] + " " + batteryChoice + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][2] + "\n";
+  return onScreen;
+}
 
 // "Battery Modules": {
 //   type: "bat-mon-chooser",
