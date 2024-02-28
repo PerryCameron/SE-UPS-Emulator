@@ -205,50 +205,52 @@ let menus = {
       0: "NONE",
       1: "/36 ",
     },
+    frameChoice: "0",
+    batteryChoice: "0",
     module: "0",
   },
   XR1: {
     batteries: {
-      1: { sn: "", loc: "L1A", Status: "Not Installed" },
-      2: { sn: "", loc: "L1B", Status: "Not Installed" },
-      3: { sn: "", loc: "L1C", Status: "Not Installed" },
-      4: { sn: "", loc: "L1D", Status: "Not Installed" },
-      5: { sn: "", loc: "L2A", Status: "Not Installed" },
-      6: { sn: "", loc: "L2B", Status: "Not Installed" },
-      7: { sn: "", loc: "L2C", Status: "Not Installed" },
-      8: { sn: "", loc: "L2D", Status: "Not Installed" },
-      9: { sn: "", loc: "L3A", Status: "Not Installed" },
-      10: { sn: "", loc: "L3B", Status: "Not Installed" },
-      11: { sn: "", loc: "L3C", Status: "Not Installed" },
-      12: { sn: "", loc: "L3D", Status: "Not Installed" },
-      13: { sn: "", loc: "L4A", Status: "Not Installed" },
-      14: { sn: "", loc: "L4B", Status: "Not Installed" },
-      15: { sn: "", loc: "L4C", Status: "Not Installed" },
-      16: { sn: "", loc: "L4D", Status: "Not Installed" },
-      17: { sn: "PD1346350212", loc: "L5A", Status: "OK" },
-      18: { sn: "PD2319941331", loc: "L5B", Status: "OK" },
-      19: { sn: "5D2320T37247", loc: "L5C", Status: "OK" },
-      20: { sn: "0H2321L00139", loc: "L5D", Status: "OK" },
-      21: { sn: "5D2320T37212", loc: "L6A", Status: "OK" },
-      22: { sn: "0H2320L00257", loc: "L6B", Status: "OK" },
-      23: { sn: "0H2320L03992", loc: "L6C", Status: "OK" },
-      24: { sn: "0H2320L00253", loc: "L6D", Status: "OK" },
-      25: { sn: "0H2320L00247", loc: "L7A", Status: "OK" },
-      26: { sn: "0H2312L11587", loc: "L7B", Status: "OK" },
-      27: { sn: "5D2320T46970", loc: "L7C", Status: "OK" },
-      28: { sn: "0H2321L00084", loc: "L7D", Status: "OK" },
-      29: { sn: "0H2320L00259", loc: "L8A", Status: "OK" },
-      30: { sn: "0H2321L00167", loc: "L8B", Status: "OK" },
-      31: { sn: "0H2320L00261", loc: "L8C", Status: "OK" },
-      32: { sn: "0H2320L00256", loc: "L8D", Status: "OK" },
-      33: { sn: "0H2320L00252", loc: "L9A", Status: "OK" },
-      34: { sn: "0H2320L00278", loc: "L9B", Status: "OK" },
-      35: { sn: "0H2320L00275", loc: "L9C", Status: "OK" },
-      36: { sn: "0H2320L03993", loc: "L9D", Status: "OK" },
+      0: { sn: "", loc: "L1A", Status: "Not Installed" },
+      1: { sn: "", loc: "L1B", Status: "Not Installed" },
+      2: { sn: "", loc: "L1C", Status: "Not Installed" },
+      3: { sn: "", loc: "L1D", Status: "Not Installed" },
+      4: { sn: "", loc: "L2A", Status: "Not Installed" },
+      5: { sn: "", loc: "L2B", Status: "Not Installed" },
+      6: { sn: "", loc: "L2C", Status: "Not Installed" },
+      7: { sn: "", loc: "L2D", Status: "Not Installed" },
+      8: { sn: "", loc: "L3A", Status: "Not Installed" },
+      9: { sn: "", loc: "L3B", Status: "Not Installed" },
+      10: { sn: "", loc: "L3C", Status: "Not Installed" },
+      11: { sn: "", loc: "L3D", Status: "Not Installed" },
+      12: { sn: "", loc: "L4A", Status: "Not Installed" },
+      13: { sn: "", loc: "L4B", Status: "Not Installed" },
+      14: { sn: "", loc: "L4C", Status: "Not Installed" },
+      15: { sn: "", loc: "L4D", Status: "Not Installed" },
+      16: { sn: "PD1346350212", loc: "L5A", Status: "OK" },
+      17: { sn: "PD2319941331", loc: "L5B", Status: "OK" },
+      18: { sn: "5D2320T37247", loc: "L5C", Status: "OK" },
+      19: { sn: "0H2321L00139", loc: "L5D", Status: "OK" },
+      20: { sn: "5D2320T37212", loc: "L6A", Status: "OK" },
+      21: { sn: "0H2320L00257", loc: "L6B", Status: "OK" },
+      22: { sn: "0H2320L03992", loc: "L6C", Status: "OK" },
+      23: { sn: "0H2320L00253", loc: "L6D", Status: "OK" },
+      24: { sn: "0H2320L00247", loc: "L7A", Status: "OK" },
+      25: { sn: "0H2312L11587", loc: "L7B", Status: "OK" },
+      26: { sn: "5D2320T46970", loc: "L7C", Status: "OK" },
+      27: { sn: "0H2321L00084", loc: "L7D", Status: "OK" },
+      28: { sn: "0H2320L00259", loc: "L8A", Status: "OK" },
+      29: { sn: "0H2321L00167", loc: "L8B", Status: "OK" },
+      30: { sn: "0H2320L00261", loc: "L8C", Status: "OK" },
+      31: { sn: "0H2320L00256", loc: "L8D", Status: "OK" },
+      32: { sn: "0H2320L00252", loc: "L9A", Status: "OK" },
+      33: { sn: "0H2320L00278", loc: "L9B", Status: "OK" },
+      34: { sn: "0H2320L00275", loc: "L9C", Status: "OK" },
+      35: { sn: "0H2320L03993", loc: "L9D", Status: "OK" },
     },
   },
   "Raw Status Data": {
-    type: "pm-raw-status",
+    type: "raw-status",
     menu: {
       0: "PM:",
       1: "Raw Status",
@@ -332,8 +334,19 @@ let menus = {
     output: { 1: "5.28", 2: "6.47", 3: "4.15" },
   },
   "Manufacturing Data": {
-    type: "pm-manufacture-data",
+    type: "manufacture-data",
     menu: "none",
+    im: "Main Intel Mod\nFW: 05.20     HW: B\nSN: QD2312110554\nMfg Date: 03/24/23",
+  },
+  "Main Intel Mod": {
+    type: "labeled-three-choice",
+    label: "Main Intel Mod",
+    data: "Power Modules",
+    menu: {
+      0: "Status:On & Ok",
+      1: "Manufacturing Data",
+      2: "Raw Status Data",
+    },
   },
 };
 
@@ -466,16 +479,18 @@ function drawScreen(includeCursor) {
       return notAvailableYetScreen();
     case "module-chooser":
       return moduleChooserScreen(includeCursor);
-    case "pm-manufacture-data":
-      return pmManufactureDataScreen();
-    case "pm-raw-status":
-      return pmRawStatusDataScreen();
+    case "manufacture-data":
+      return manufactureDataScreen();
+    case "raw-status":
+      return rawStatusDataScreen();
     case "bat-mon-chooser":
       return batMonChooserScreen(includeCursor);
     case "mode-switch-menu-item":
       return modeSwitchMenuItemScreen(includeCursor);
     case "four-scroll":
       return fourScrollScreen(includeCursor);
+    case "labeled-three-choice":
+      return labeledThreeChoiceScreen(includeCursor);
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -591,6 +606,17 @@ function labeledTwoChoiceScreen(includeCursor) {
   return onScreen;
 }
 
+function labeledThreeChoiceScreen(includeCursor) {
+  menuSize = 3;
+  let cursor = [" ", " ", " "];
+  if (includeCursor) cursor[cursorPosition] = ">";
+  let onScreen = selectedObject["label"] + "\n";
+  onScreen += cursor[0] + selectedObject["menu"][0] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][1] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][2];
+  return onScreen;
+}
+
 // five or more items
 function selectCursor(includeCursor, cursor) {
   if (includeCursor) {
@@ -648,23 +674,36 @@ function fourScrollScreen(includeCursor) {
   return onScreen;
 }
 
-function pmRawStatusDataScreen() {
-  let moduleNumber = menus["Power Modules"]["module"];
-  let module = menus["Power Modules"]["Raw Status"][moduleNumber];
-  let onScreen = "PM: " + moduleNumber + " Raw Status\n";
-  onScreen += module["RS1"] + "\n";
-  onScreen += module["RS2"] + "\n";
-  onScreen += module["RS3"] + "\n";
+function rawStatusDataScreen() {
+  let onScreen = "";
+  if (lastMenu[5] === "Additional Info") {
+    let moduleNumber = menus["Power Modules"]["module"];
+    let module = menus["Power Modules"]["Raw Status"][moduleNumber];
+    onScreen = "PM: " + moduleNumber + " Raw Status\n";
+    onScreen += module["RS1"] + "\n";
+    onScreen += module["RS2"] + "\n";
+    onScreen += module["RS3"] + "\n";
+  } else if (lastMenu[5] === "Main Intel Mod") {
+    onScreen = "MIM Raw Status\n";
+    onScreen += "M State = 50 110\n";
+    onScreen += "0000 1110\n";
+    onScreen += "00000 #E0 3E 0000";
+  }
   return onScreen;
 }
 
-function pmManufactureDataScreen() {
-  let moduleNumber = menus["Power Modules"]["module"];
-  let module = menus["Power Modules"]["choice"][moduleNumber];
-  let onScreen = "PM: " + module["mod"] + " Frame: Main\n";
-  onScreen += "FW: " + module["FW"] + "     HW: " + module["HW"] + "\n";
-  onScreen += "SN: " + module["SN"] + "\n";
-  onScreen += "Mfg Date: " + module["mdate"] + "\n";
+function manufactureDataScreen() {
+  let onScreen = "";
+  if (lastMenu[5] === "Main Intel Mod") {
+    onScreen = menus["Manufacturing Data"]["im"];
+  } else if (lastMenu[5] === "Additional Info") {
+    let moduleNumber = menus["Power Modules"]["module"];
+    let module = menus["Power Modules"]["choice"][moduleNumber];
+    onScreen = "PM: " + module["mod"] + " Frame: Main\n";
+    onScreen += "FW: " + module["FW"] + "     HW: " + module["HW"] + "\n";
+    onScreen += "SN: " + module["SN"] + "\n";
+    onScreen += "Mfg Date: " + module["mdate"] + "\n";
+  }
   return onScreen;
 }
 
@@ -707,35 +746,13 @@ function moduleChooserScreen(includeCursor) {
   return onScreen;
 }
 
-// "Battery Modules": {
-//   type: "bat-mon-chooser",
-//   menu: {
-//     0: "Frame:",
-//     1: "Bat Mod:",
-//     2: "Status:",
-//   },
-//   frame: {
-//     0: "Main of 2",
-//     1: "2 of 2",
-//   },
-//   "Bat Mod": {
-//     0: "NONE",
-//     1: "/36 ",
-//   },
-
-//   module: "0",
-// },
-
 // provides functionality for the battery diagnostic tests
 function batMonChooserScreen(includeCursor) {
   menuSize = 3;
   // makes sure choicePosition does not go out of range
   if (editMode === true && choicePosition > 36) choicePosition = 0;
-  let menuSelected = choicePosition % 2 === 0 ? 0 : 1;
-  let frameChoice = selectedObject["frame"][menuSelected];
-  let batteryChoice = selectedObject["Bat Mod"][menuSelected];
-
-  // let module = selectedObject["choice"][moduleChoice];
+  if (cursorPosition === 0) selectedObject["frameChoice"] = choicePosition % 2 === 0 ? 0 : 1;
+  let batteryChoice = selectedObject["Bat Mod"][selectedObject["frameChoice"]];
   let cursor = [" ", " ", " "];
   let arrowCursor = [" ", " ", " "];
   if (includeCursor) {
@@ -743,17 +760,17 @@ function batMonChooserScreen(includeCursor) {
       case 0:
         returnDisable = false;
         preEditMode = true; // probably put to false under escape
-        console.log("editMode=" + editMode + " pre-editMode" + preEditMode + " choicePosition=" + choicePosition);
         editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
         escapeDisable = false;
         break;
       case 1:
+        returnDisable = false;
+        preEditMode = true; // probably put to false under escape
         editMode ? (arrowCursor[1] = "}") : (cursor[1] = ">");
-        escapeDisable = true;
-        returnDisable = true;
+        escapeDisable = false;
         break;
       case 2:
-        returnDisable = false;
+        returnDisable = true;
         preEditMode = false;
         editMode = false;
         cursor[2] = ">";
@@ -761,70 +778,17 @@ function batMonChooserScreen(includeCursor) {
         break;
     }
   }
-  let onScreen = cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + frameChoice + "\n";
-  if (batteryChoice !== "NONE")
-    onScreen += cursor[1] + selectedObject["menu"][1] + " " + choicePosition + batteryChoice + "\n";
-  else onScreen += cursor[1] + selectedObject["menu"][1] + " " + batteryChoice + "\n";
-  onScreen += cursor[2] + selectedObject["menu"][2] + "\n";
+  let location = menus["XR1"]["batteries"][choicePosition + 1]["loc"];
+  let onScreen = cursor[0] + "Frame:" + arrowCursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
+  if (batteryChoice !== "NONE") {
+    onScreen += cursor[1] + "Bat Mod:" + arrowCursor[1] + choicePosition + batteryChoice + " " + location + "\n";
+    onScreen += cursor[2] + "Status:" + " " + menus["XR1"]["batteries"][choicePosition + 1]["Status"] + "\n";
+  } else {
+    onScreen += cursor[1] + "Bat Mod:" + " " + batteryChoice + "\n";
+    onScreen += cursor[2] + "Status:" + " Not Valid\n";
+  }
   return onScreen;
 }
-
-// "Battery Modules": {
-//   type: "bat-mon-chooser",
-//   menu: {
-//     0: "Frame:",
-//     1: "Bat Mod:",
-//     2: "Status:",
-//   },
-//   frame: {
-//     0: "Main of 2",
-//     1: "2 of 2",
-//   },
-//   "Bat Mod": {
-//     0: "NONE",
-//     1: "/36 ",
-//   },
-// },
-// XR1: {
-//   batteries: {
-//     1: { sn: "", loc: "L1A", Status: "Not Installed" },
-//     2: { sn: "", loc: "L1B", Status: "Not Installed" },
-//     3: { sn: "", loc: "L1C", Status: "Not Installed" },
-//     4: { sn: "", loc: "L1D", Status: "Not Installed" },
-//     5: { sn: "", loc: "L2A", Status: "Not Installed" },
-//     6: { sn: "", loc: "L2B", Status: "Not Installed" },
-//     7: { sn: "", loc: "L2C", Status: "Not Installed" },
-//     8: { sn: "", loc: "L2D", Status: "Not Installed" },
-//     9: { sn: "", loc: "L3A", Status: "Not Installed" },
-//     10: { sn: "", loc: "L3B", Status: "Not Installed" },
-//     11: { sn: "", loc: "L3C", Status: "Not Installed" },
-//     12: { sn: "", loc: "L3D", Status: "Not Installed" },
-//     13: { sn: "", loc: "L4A", Status: "Not Installed" },
-//     14: { sn: "", loc: "L4B", Status: "Not Installed" },
-//     15: { sn: "", loc: "L4C", Status: "Not Installed" },
-//     16: { sn: "", loc: "L4D", Status: "Not Installed" },
-//     17: { sn: "PD1346350212", loc: "L5A", Status: "OK" },
-//     18: { sn: "PD2319941331", loc: "L5B", Status: "OK" },
-//     19: { sn: "5D2320T37247", loc: "L5C", Status: "OK" },
-//     20: { sn: "0H2321L00139", loc: "L5D", Status: "OK" },
-//     21: { sn: "5D2320T37212", loc: "L6A", Status: "OK" },
-//     22: { sn: "0H2320L00257", loc: "L6B", Status: "OK" },
-//     23: { sn: "0H2320L03992", loc: "L6C", Status: "OK" },
-//     24: { sn: "0H2320L00253", loc: "L6D", Status: "OK" },
-//     25: { sn: "0H2320L00247", loc: "L7A", Status: "OK" },
-//     26: { sn: "0H2312L11587", loc: "L7B", Status: "OK" },
-//     27: { sn: "5D2320T46970", loc: "L7C", Status: "OK" },
-//     28: { sn: "0H2321L00084", loc: "L7D", Status: "OK" },
-//     29: { sn: "0H2320L00259", loc: "L8A", Status: "OK" },
-//     30: { sn: "0H2321L00167", loc: "L8B", Status: "OK" },
-//     31: { sn: "0H2320L00261", loc: "L8C", Status: "OK" },
-//     32: { sn: "0H2320L00256", loc: "L8D", Status: "OK" },
-//     33: { sn: "0H2320L00252", loc: "L9A", Status: "OK" },
-//     34: { sn: "0H2320L00278", loc: "L9B", Status: "OK" },
-//     35: { sn: "0H2320L00275", loc: "L9C", Status: "OK" },
-//     36: { sn: "0H2320L03993", loc: "L9D", Status: "OK" },
-//   },
-// },
 
 function pushOutScreen() {
   if (selectedObject["menu"][cursorPosition][0] === "data-block") return dataFedScreen();
