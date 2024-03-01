@@ -158,12 +158,12 @@ let menus = {
   "Power Modules": {
     type: "module-chooser",
     choice: {
-      0: { mod: "1", loc: "L2", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
+      0: { mod: "1", loc: "L2", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240127", mdate: "09/14/23" },
       1: { mod: "2", loc: "L3", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
       2: { mod: "3", loc: "L4", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
       3: { mod: "4", loc: "L5", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
       4: { mod: "5", loc: "L6", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
-      5: { mod: "6", loc: "L7", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240127", mdate: "09/14/23" },
+      5: { mod: "6", loc: "L7", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
       6: { mod: "7", loc: "L8", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240134", mdate: "09/14/23" },
       7: { mod: "8", loc: "L9", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240147", mdate: "09/14/23" },
       8: { mod: "9", loc: "L10", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240141", mdate: "09/14/23" },
@@ -341,6 +341,16 @@ let menus = {
   "Main Intel Mod": {
     type: "labeled-three-choice",
     label: "Main Intel Mod",
+    data: "Power Modules",
+    menu: {
+      0: "Status:On & Ok",
+      1: "Manufacturing Data",
+      2: "Raw Status Data",
+    },
+  },
+  "Redundant Intel Mod": {
+    type: "labeled-three-choice",
+    label: "Redundant Intel Mod",
     data: "Power Modules",
     menu: {
       0: "Status:On & Ok",
@@ -688,6 +698,11 @@ function rawStatusDataScreen() {
     onScreen += "M State = 50 110\n";
     onScreen += "0000 1110\n";
     onScreen += "00000 #E0 3E 0000";
+  } else if (lastMenu[5] === "Redundant Intel Mod") {
+    onScreen = "MIM Raw Status\n";
+    onScreen += "M State = 50 110\n";
+    onScreen += "0000 1110\n";
+    onScreen += "00000 3E0 3E 0000";
   }
   return onScreen;
 }
@@ -703,6 +718,11 @@ function manufactureDataScreen() {
     onScreen += "FW: " + module["FW"] + "     HW: " + module["HW"] + "\n";
     onScreen += "SN: " + module["SN"] + "\n";
     onScreen += "Mfg Date: " + module["mdate"] + "\n";
+  } else if (lastMenu[6] === "Redundant Intel Mod") {
+    onScreen = "Redundant Intel Mod\n";
+    onScreen += "FW: 05.20      HW: B\n";
+    onScreen += "SN: QD2312110536\n";
+    onScreen += "Mfg Date: 03/24/23";
   }
   return onScreen;
 }
