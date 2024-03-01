@@ -157,6 +157,7 @@ let menus = {
   },
   "Power Modules": {
     type: "module-chooser",
+    flag: "pre",
     choice: {
       0: { mod: "1", loc: "L2", Status: "On & Ok", FW: "05.05", HW: "6", SN: "QD2337240127", mdate: "09/14/23" },
       1: { mod: "2", loc: "L3", Status: "Not Installed", FW: "", HW: "", SN: "", mdate: "" },
@@ -192,6 +193,7 @@ let menus = {
   },
   "Battery Modules": {
     type: "bat-mon-chooser",
+    flag: "pre",
     menu: {
       0: "Frame:",
       1: "Bat Mod:",
@@ -412,6 +414,11 @@ function printMenus() {
   console.log("5:" + lastMenu[5]);
   console.log("6:" + lastMenu[6]);
   console.log("7:" + lastMenu[7]);
+  console.log(
+    "toggle: " + toggle + " inBypass:" + inBypass + " inSelfTest:" + inSelfTest + " anyKeyPress: " + anyKeyPress
+  );
+  console.log("cursorPosition:" + cursorPosition + " choicePosition" + choicePosition + "menuSize:" + menuSize);
+  console.log("menuLevel:" + menuLevel + " preEditMode:" + preEditMode + " editMode:" + editMode);
 }
 
 function isAScrollDownMenu(menuKey) {
@@ -464,6 +471,11 @@ function downButton() {
 }
 
 function drawScreen(includeCursor) {
+  // below line of code fixes a bug where if you went into a menu that set
+  // preEditMode to true and if you exited, you couldn't drill down into
+  // any other menus. This fixes that issue but needed document because this is
+  // a super ugly hack, but it works and I am going to keep it
+  if (preEditMode & (selectedObject["flag"] != "pre")) preEditMode = false;
   switch (selectedObject["type"]) {
     case "all-in-one":
       return allInOneScreen(includeCursor);
@@ -951,6 +963,7 @@ function moveScreen(arrowKey) {
 function escapeButton() {
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
+  // if (preEditMode) preEditMode = false;
   else if (editMode) backToNormalMode();
   else if (escapeDisable);
   else {
