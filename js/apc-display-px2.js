@@ -339,6 +339,12 @@ let menus = {
     type: "manufacture-data",
     menu: "none",
     im: "Main Intel Mod\nFW: 05.20     HW: B\nSN: QD2312110554\nMfg Date: 03/24/23",
+    rm: "Redundant Intel Mod\nFW: 05.20      HW: B\nSN: QD2312110536\nMfg Date: 03/24/23",
+  },
+  "Raw Status": {
+    menu: "none",
+    im: "MIM Raw Status\nM State = 50 110\n0000 1110\n00000 3E0 3E 0000",
+    rm: "MIM Raw Status\nM State = 50 110\n0000 1110\n00000 3E0 3E 0000",
   },
   "Main Intel Mod": {
     type: "labeled-three-choice",
@@ -358,6 +364,15 @@ let menus = {
       0: "Status:On & Ok",
       1: "Manufacturing Data",
       2: "Raw Status Data",
+    },
+  },
+  "Frame Status": {
+    type: "frame-status-menu",
+    label: "Bat Modules:",
+    menu: {
+      0: "Frame: 2 of 2",
+      1: "Battery Subsystems",
+      2: "Additional Info",
     },
   },
 };
@@ -479,8 +494,8 @@ function drawScreen(includeCursor) {
   switch (selectedObject["type"]) {
     case "all-in-one":
       return allInOneScreen(includeCursor);
-    // case "labeled-all-in-one":
-    //   return labledAllInOneScreen(includeCursor);
+    case "frame-status-menu":
+      return frameStatusMenuScreen(includeCursor);
     case "scroll-down":
       return scrollDownScreen(includeCursor);
     case "labeled-two-choice":
@@ -491,8 +506,6 @@ function drawScreen(includeCursor) {
       return displayScreen();
     case "push-out":
       return pushOutScreen();
-    // case "editable-choice":
-    //   return editableChoiceScreen();
     case "walled-event":
       return walledEvent();
     case "abort":
@@ -516,6 +529,27 @@ function drawScreen(includeCursor) {
     default:
       return scrollDownScreen(includeCursor);
   }
+}
+
+// "Frame Status": {
+//   type: "frame-status-menu",
+//   label: "Bat Modules:",
+//   menu: {
+//     0: "Frame: 2 of 2",
+//     1: "Battery Subsystems",
+//     2: "Additional Info",
+//   },
+// },
+
+function frameStatusMenuScreen(includeCursor) {
+  menuSize = 3;
+  let cursor = [" ", " ", " "];
+  if (includeCursor) cursor[cursorPosition] = ">";
+  let onScreen = cursor[0] + selectedObject["menu"][0] + "\n";
+  onScreen += selectedObject["label"] + " 20/36\n";
+  onScreen += cursor[1] + selectedObject["menu"][1] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][2];
+  return onScreen;
 }
 
 function walledEvent() {
@@ -706,15 +740,9 @@ function rawStatusDataScreen() {
     onScreen += module["RS2"] + "\n";
     onScreen += module["RS3"] + "\n";
   } else if (lastMenu[5] === "Main Intel Mod") {
-    onScreen = "MIM Raw Status\n";
-    onScreen += "M State = 50 110\n";
-    onScreen += "0000 1110\n";
-    onScreen += "00000 #E0 3E 0000";
+    onScreen = menus["Raw Status"]["im"];
   } else if (lastMenu[5] === "Redundant Intel Mod") {
-    onScreen = "MIM Raw Status\n";
-    onScreen += "M State = 50 110\n";
-    onScreen += "0000 1110\n";
-    onScreen += "00000 3E0 3E 0000";
+    onScreen = menus["Raw Status"]["rm"];
   }
   return onScreen;
 }
@@ -723,6 +751,8 @@ function manufactureDataScreen() {
   let onScreen = "";
   if (lastMenu[5] === "Main Intel Mod") {
     onScreen = menus["Manufacturing Data"]["im"];
+  } else if (lastMenu[5] === "Redundant Intel Mod") {
+    onScreen = menus["Manufacturing Data"]["rm"];
   } else if (lastMenu[5] === "Additional Info") {
     let moduleNumber = menus["Power Modules"]["module"];
     let module = menus["Power Modules"]["choice"][moduleNumber];
@@ -730,11 +760,6 @@ function manufactureDataScreen() {
     onScreen += "FW: " + module["FW"] + "     HW: " + module["HW"] + "\n";
     onScreen += "SN: " + module["SN"] + "\n";
     onScreen += "Mfg Date: " + module["mdate"] + "\n";
-  } else if (lastMenu[6] === "Redundant Intel Mod") {
-    onScreen = "Redundant Intel Mod\n";
-    onScreen += "FW: 05.20      HW: B\n";
-    onScreen += "SN: QD2312110536\n";
-    onScreen += "Mfg Date: 03/24/23";
   }
   return onScreen;
 }
