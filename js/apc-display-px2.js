@@ -375,6 +375,13 @@ let menus = {
       2: "Additional Info",
     },
   },
+  "Battery Subsystems": {
+    type: "push-out",
+    menu: {
+      0: { 0: "Frame: 2", 1: "Battery Monitor Bds", 2: " #1: OK", 3: " #2: OK              {" },
+      1: { 0: "DC Breaker / Fuse:   ^", 1: " Closed", 2: "System Power Supply:", 3: " OK" },
+    },
+  },
 };
 
 let screen = [0, 3];
@@ -420,20 +427,20 @@ function displayScreen() {
 
 function printMenus() {
   console.clear();
-  console.log("Menu Levels, current: " + menuLevel);
+  console.log("Menu Level: " + menuLevel);
   console.log("0:" + lastMenu[0]);
-  console.log("1:" + lastMenu[1]);
-  console.log("2:" + lastMenu[2]);
-  console.log("3:" + lastMenu[3]);
-  console.log("4:" + lastMenu[4]);
-  console.log("5:" + lastMenu[5]);
-  console.log("6:" + lastMenu[6]);
-  console.log("7:" + lastMenu[7]);
+  if (menuLevel > 0) console.log("1:" + lastMenu[1]);
+  if (menuLevel > 1) console.log("2:" + lastMenu[2]);
+  if (menuLevel > 2) console.log("3:" + lastMenu[3]);
+  if (menuLevel > 3) console.log("4:" + lastMenu[4]);
+  if (menuLevel > 4) console.log("5:" + lastMenu[5]);
+  if (menuLevel > 5) console.log("6:" + lastMenu[6]);
+  if (menuLevel > 6) console.log("7:" + lastMenu[7]);
   console.log(
     "toggle: " + toggle + " inBypass:" + inBypass + " inSelfTest:" + inSelfTest + " anyKeyPress: " + anyKeyPress
   );
-  console.log("cursorPosition:" + cursorPosition + " choicePosition" + choicePosition + "menuSize:" + menuSize);
-  console.log("menuLevel:" + menuLevel + " preEditMode:" + preEditMode + " editMode:" + editMode);
+  console.log("cursorPosition: " + cursorPosition + " choicePosition: " + choicePosition + " menuSize: " + menuSize);
+  console.log("preEditMode: " + preEditMode + " editMode: " + editMode);
 }
 
 function isAScrollDownMenu(menuKey) {

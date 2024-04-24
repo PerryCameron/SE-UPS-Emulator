@@ -1,0 +1,43 @@
+Debug.Print "Before -> Multiplier: " & Multiplier & " Quantity " & Quantity
+Multiplier = Quantity  'Next level components get multiplied by current level quantities
+Debug.Print "After -> Multiplier: " & Multiplier & " Quantity " & Quantity
+
+Before -> Multiplier: 1 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+Before -> Multiplier: 0 Quantity 0
+After -> Multiplier: 0 Quantity 0
+
+
+
