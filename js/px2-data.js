@@ -115,16 +115,6 @@ let menus = {
       0: "Main Intel Mod",
       1: "Redundant Intel Mod",
       2: "Frame Status",
-      3: "Bypass Switch Mod   }",
-      4: "Frame Status",
-    },
-  },
-  "Other Diagnostics": {
-    type: "scroll-down",
-    menu: {
-      0: "Main Intel Mod",
-      1: "Redundant Intel Mod",
-      2: "Frame Status",
       3: "Bypass Switch Mod   {",
       4: "Frame Status",
     },
@@ -354,32 +344,37 @@ let menus = {
   "Manufacturing Data": {
     type: "manufacture-data",
     menu: "none",
-  },
-  "Manufacturing Data Frame": {
-    type: "manufacture-data",
-    menu: {
-      0: "Frame: 2",
-      1: "FW: 03.00     HW: NA",
-      2: "SN: 000000000000",
-      3: "Mfg Date: 01/01/01",
+    frame: {
+      menu: {
+        0: "Frame: 2",
+        1: "FW: 03.00     HW: NA",
+        2: "SN: 000000000000",
+        3: "Mfg Date: 01/01/01",
+      },
     },
-  },
-  "Manufacturing Data MIM": {
-    type: "manufacture-data",
-    menu: {
-      0: "Main Intel Mod",
-      1: "FW: 05.20      HW: B",
-      2: "SN: QD2312110554",
-      3: "Mfg Date: 03/24/23",
+    mim: {
+      menu: {
+        0: "Main Intel Mod",
+        1: "FW: 05.20      HW: B",
+        2: "SN: QD2312110554",
+        3: "Mfg Date: 03/24/23",
+      },
     },
-  },
-  "Manufacturing Data RIM": {
-    type: "manufacture-data",
-    menu: {
-      0: "Main Intel Mod",
-      1: "FW: 05.20      HW: B",
-      2: "SN: QD2312110536",
-      3: "Mfg Date: 03/24/23",
+    rim: {
+      menu: {
+        0: "Main Intel Mod",
+        1: "FW: 05.20      HW: B",
+        2: "SN: QD2312110536",
+        3: "Mfg Date: 03/24/23",
+      },
+    },
+    bypass: {
+      menu: {
+        0: "Bypass Switch Module",
+        1: "FW: 05.00     HW: 1",
+        2: "SN: QD2331140192",
+        3: "Mfg Date: 08/04/23",
+      },
     },
   },
   "Raw Status": {
@@ -445,8 +440,16 @@ let menus = {
       1: { 0: "DC Breaker / Fuse:   ^", 1: " Closed", 2: "System Power Supply:", 3: " OK" },
     },
   },
-  "Status:On & OK": {
-    type: "none",
+  "Bypass Switch Mod   {": {
+    type: "labeled-two-choice",
+    label: "Bypass Switch Module",
+    menu: {
+      0: "Status:On & Ok",
+      1: "Manufacturing Data",
+    },
+  },
+  "Status: On & OK": {
+    type: "status-ok",
     label: "none",
     menu: {
       0: "none",

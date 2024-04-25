@@ -30,15 +30,6 @@ window.onload = function () {
   loadBeepSound("trimbeep.mp3");
 };
 
-function displayScreen() {
-  stopAlternating();
-  let onScreen = selectedObject["menu"]["0"] + "\n";
-  onScreen += selectedObject["menu"]["1"] + "\n";
-  onScreen += selectedObject["menu"]["2"] + "\n";
-  onScreen += selectedObject["menu"]["3"] + "\n";
-  return onScreen;
-}
-
 function printMenus() {
   console.clear();
   console.log("Menu Level: " + menuLevel);
@@ -149,6 +140,8 @@ function drawScreen(includeCursor) {
       return labeledThreeChoiceScreen(includeCursor);
     case "additional-info":
       return additionalInfoScreen(includeCursor);
+    case "status-ok":
+      console.log("status is ok");
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -376,11 +369,13 @@ function manufactureDataScreen() {
   // "Manufacturing Data"
   let onScreen = "";
   if (lastMenu[5] === "Main Intel Mod") {
-    onScreen = printSimpleScreen(menus["Manufacturing Data MIM"].menu);
+    onScreen = printSimpleScreen(menus["Manufacturing Data"]["mim"].menu);
   } else if (lastMenu[5] === "Frame Status") {
-    onScreen = printSimpleScreen(menus["Manufacturing Data Frame"].menu);
+    onScreen = printSimpleScreen(menus["Manufacturing Data"]["frame"].menu);
   } else if (lastMenu[5] === "Redundant Intel Mod") {
-    onScreen = printSimpleScreen(menus["Manufacturing Data RIM"].menu);
+    onScreen = printSimpleScreen(menus["Manufacturing Data"]["rim"].menu);
+  } else if (lastMenu[5] === "Bypass Switch Mod   {") {
+    onScreen = printSimpleScreen(menus["Manufacturing Data"]["bypass"].menu);
   } else if (lastMenu[4] === "Power Modules") {
     let moduleNumber = menus["Power Modules"]["module"];
     let module = menus["Power Modules"]["choice"][moduleNumber];
@@ -394,6 +389,15 @@ function manufactureDataScreen() {
 
 function printSimpleScreen(menu) {
   return Object.values(menu).join("\n");
+}
+
+function displayScreen() {
+  stopAlternating();
+  let onScreen = selectedObject["menu"]["0"] + "\n";
+  onScreen += selectedObject["menu"]["1"] + "\n";
+  onScreen += selectedObject["menu"]["2"] + "\n";
+  onScreen += selectedObject["menu"]["3"] + "\n";
+  return onScreen;
 }
 
 // provides funtionality for power module diagnostic tests
