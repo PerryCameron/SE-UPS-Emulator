@@ -267,18 +267,8 @@ function additionalInfoScreen(includeCursor) {
   } else if (lastMenu[5] === "Frame Status") {
     selectedObject = menus["Additional Info Frame Status"];
   }
-
   return onScreen;
 }
-
-// "Start Runtime Cal": {
-//   type: "labeled-two-choice",
-//   label: "Confirm:\n Start Runtime Cal?",
-//   menu: {
-//     0: "NO, ABORT",
-//     1: "YES, Start Cal",
-//   },
-// },
 
 function labeledTwoChoiceScreen(includeCursor) {
   menuSize = 2;
@@ -569,16 +559,7 @@ function moveArrow(arrowKey) {
       if (cursorPosition < menuSize - 1) cursorPosition++;
       break;
   }
-  console.log(
-    "cursor position=" +
-      cursorPosition +
-      " choicePosition=" +
-      choicePosition +
-      " preEditMode=" +
-      preEditMode +
-      " editMode=" +
-      editMode
-  );
+  printMenus();
 }
 
 function handleEditMode(arrowKey) {
@@ -620,12 +601,6 @@ function moveScreen(arrowKey) {
       break;
   }
 }
-
-// function handleSelfTest() {
-//   anyKeyPress = true;
-//   selectedObject = menus["self-test-started"];
-//   textarea.value = displayScreen();
-// }
 
 function escapeButton() {
   playBeep();
@@ -681,12 +656,14 @@ function setMenu(menuName, level) {
   stopAlternating();
   if (menuName === "Cancel") {
     escapeButton();
-  } else if (menuName === "Status: On & Ok") {
+  } else if (menuName === "On & Ok") {
     console.log("doing nothing");
   } else {
     menuLevel = level;
     lastMenu[menuLevel] = menuName;
-    console.log(menus[menuName]["menu"]);
+    if (menus[menuName]["menu"] === undefined) {
+      console.log("This menu is undefined");
+    } else console.log(menus[menuName]["menu"]);
     menuSize = Object.keys(menus[menuName]["menu"]).length;
     isScrollDownMenu = isAScrollDownMenu(menuName);
     selectedObject = menus[menuName];

@@ -445,4 +445,11 @@ let menus = {
       1: { 0: "DC Breaker / Fuse:   ^", 1: " Closed", 2: "System Power Supply:", 3: " OK" },
     },
   },
+  "Status:On & OK": {
+    type: "none",
+    label: "none",
+    menu: {
+      0: "none",
+    },
+  },
 };
