@@ -18,6 +18,7 @@ let intervalId = null;
 let lastMenu = ["Default", "top-menu", "level 2", "level 3", "level 4", "level 5", "level 6", "level 7"];
 let selectedObject = menus["Default"];
 let textarea = document.createElement("textarea");
+let currentFunction = "";
 textarea.className = "screen-area";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -33,6 +34,7 @@ window.onload = function () {
 function printMenus() {
   console.clear();
   console.log("Menu Level: " + menuLevel);
+  console.log("Function: " + currentFunction);
   console.log("0:" + lastMenu[0]);
   if (menuLevel > 0) console.log("1:" + lastMenu[1]);
   if (menuLevel > 1) console.log("2:" + lastMenu[2]);
@@ -103,7 +105,9 @@ function drawScreen(includeCursor) {
   // any other menus. This fixes that issue but needed document because this is
   // a super ugly hack, but it works and I am going to keep it
   if (preEditMode & (selectedObject["flag"] != "pre")) preEditMode = false;
-  switch (selectedObject["type"]) {
+  currentFunction = selectedObject["type"];
+  printTestData();
+  switch (currentFunction) {
     case "all-in-one":
       return allInOneScreen(includeCursor);
     case "frame-status-menu":
@@ -142,9 +146,17 @@ function drawScreen(includeCursor) {
       return additionalInfoScreen(includeCursor);
     case "status-ok":
       console.log("status is ok");
+    case "print-simple-screen":
+      return printScreen();
     default:
       return scrollDownScreen(includeCursor);
   }
+}
+
+function printTestData() {
+  let cp = document.getElementById("cursor-position");
+  cp.innerText = "";
+  cp.innerText = "Cursor Position: " + cursorPosition;
 }
 
 function frameStatusMenuScreen(includeCursor) {
@@ -166,26 +178,13 @@ function walledEvent() {
 }
 
 function handleAnyKeyPress() {
-  console.log("handle any key press");
   switch (lastMenu[menuLevel]) {
-    // case "Yes, UPS into Bypass":
-    //   console.log("case 1");
-    //   setMenu("ControlInBypass", 2);
-    //   break;
-    // case "Yes, UPS Out Of Byp":
-    //   console.log("case 2");
-    //   setMenu("top-menu", 2);
-    //   break;
     case "Not Allowed":
-      console.log("got to not allowed");
       setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
       break;
     default:
       setMenu("top-menu", 2);
   }
-  // console.log("You pressed a key");
-  // console.log(selectedObject);
-  // console.log(lastMenu);
   anyKeyPress = false;
 }
 
@@ -387,7 +386,14 @@ function manufactureDataScreen() {
   return onScreen;
 }
 
+function printScreen() {
+  onScreen = printSimpleScreen(selectedObject.menu);
+  console.log("heartbeat");
+  return onScreen;
+}
+
 function printSimpleScreen(menu) {
+  // stopAlternating();
   return Object.values(menu).join("\n");
 }
 
@@ -611,10 +617,8 @@ function escapeButton() {
   if (anyKeyPress) handleAnyKeyPress();
   // if (preEditMode) preEditMode = false;
   else if (editMode) backToNormalMode();
-  else if (escapeDisable);
+  // else if (escapeDisable);
   else {
-    // do nothing
-    // else if (inSelfTest && lastMenu[menuLevel] === "Yes, Do Self Test") handleSelfTest();
     cursorPosition = 0;
     switch (menuLevel) {
       case 0: // to all-in-one menu
@@ -622,6 +626,7 @@ function escapeButton() {
         break;
       default: // coming back from 2 deep, this works
         setMenu(lastMenu[menuLevel - 1], menuLevel - 1);
+        break;
     }
   }
 }
@@ -660,8 +665,8 @@ function setMenu(menuName, level) {
   stopAlternating();
   if (menuName === "Cancel") {
     escapeButton();
-  } else if (menuName === "On & Ok") {
-    console.log("doing nothing");
+    // } else if (menuName === "On & Ok") {
+    //   console.log("doing nothing");
   } else {
     menuLevel = level;
     lastMenu[menuLevel] = menuName;
@@ -714,7 +719,7 @@ function playBeep() {
         var source = audioContext.createBufferSource();
         source.buffer = beepBuffer;
         source.connect(audioContext.destination);
-        source.start(0); // Play immediately
+        // source.start(0); // Play immediatly  (uncomment to bring back beep)
       } else {
         console.error("Beep sound not loaded");
       }

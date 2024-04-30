@@ -116,7 +116,10 @@ let menus = {
       1: "Redundant Intel Mod",
       2: "Frame Status",
       3: "Bypass Switch Mod   {",
-      4: "Frame Status",
+      4: "Comm Bus Status",
+      5: "System Pwr Supplies",
+      6: "Comm Modules",
+      7: "Aux Device Status",
     },
   },
   "UPS Status": {
@@ -446,6 +449,33 @@ let menus = {
     menu: {
       0: "Status:On & Ok",
       1: "Manufacturing Data",
+    },
+  },
+  "Comm Bus Status": {
+    type: "print-simple-screen",
+    menu: {
+      0: "Buses Int    Ext",
+      1: " MIM: OK     OK",
+      2: " RIM: OK     OK",
+      3: "MIM<->RIM: OK",
+    },
+  },
+  "System Pwr Supplies": {
+    type: "print-simple-screen",
+    menu: {
+      0: "System Pwr Supplies",
+      1: " #1: On & OK",
+      2: " #2: On & OK",
+      3: "",
+    },
+  },
+  "Comm Modules": {
+    type: "print-simple-screen",
+    menu: {
+      0: "Network Interface:",
+      1: " On & OK",
+      2: "Switchgear Comm Bd:",
+      3: " On & OK",
     },
   },
   "Status: On & OK": {
