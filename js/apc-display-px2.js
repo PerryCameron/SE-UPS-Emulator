@@ -31,25 +31,6 @@ window.onload = function () {
   loadBeepSound("trimbeep.mp3");
 };
 
-function printMenus() {
-  console.clear();
-  console.log("Menu Level: " + menuLevel);
-  console.log("Function: " + currentFunction);
-  console.log("0:" + lastMenu[0]);
-  if (menuLevel > 0) console.log("1:" + lastMenu[1]);
-  if (menuLevel > 1) console.log("2:" + lastMenu[2]);
-  if (menuLevel > 2) console.log("3:" + lastMenu[3]);
-  if (menuLevel > 3) console.log("4:" + lastMenu[4]);
-  if (menuLevel > 4) console.log("5:" + lastMenu[5]);
-  if (menuLevel > 5) console.log("6:" + lastMenu[6]);
-  if (menuLevel > 6) console.log("7:" + lastMenu[7]);
-  console.log(
-    "toggle: " + toggle + " inBypass:" + inBypass + " inSelfTest:" + inSelfTest + " anyKeyPress: " + anyKeyPress
-  );
-  console.log("cursorPosition: " + cursorPosition + " choicePosition: " + choicePosition + " menuSize: " + menuSize);
-  console.log("preEditMode: " + preEditMode + " editMode: " + editMode);
-}
-
 function isAScrollDownMenu(menuKey) {
   if (menus[menuKey]["type"] === "scroll-down") return true;
   else return false;
@@ -154,9 +135,39 @@ function drawScreen(includeCursor) {
 }
 
 function printTestData() {
+  let ml = document.getElementById("menu-level");
+  ml.innerText = "Menu Level: " + menuLevel;
   let cp = document.getElementById("cursor-position");
-  cp.innerText = "";
   cp.innerText = "Cursor Position: " + cursorPosition;
+  let cf = document.getElementById("current-function");
+  cf.innerText = "Current Function: " + currentFunction;
+  let t = document.getElementById("toggle");
+  t.innerText = "Toggle: " + toggle;
+  let b = document.getElementById("bypass");
+  b.innerText = "In Bypass: " + inBypass;
+  let s = document.getElementById("self-test");
+  s.innerText = "In Self Test: " + inSelfTest;
+  let a = document.getElementById("any");
+  a.innerText = "Anykey Pressed: " + anyKeyPress;
+  let chp = document.getElementById("choice-position");
+  chp.innerText = "Choice Position: " + choicePosition;
+  let ms = document.getElementById("menu-size");
+  ms.innerText = "Menu Size: " + menuSize;
+  let pe = document.getElementById("pre-edit");
+  pe.innerText = "Pre-Edit Mode: " + preEditMode;
+  let e = document.getElementById("edit");
+  e.innerText = "Edit Mode: " + editMode;
+
+  let rd = document.getElementById("menu-history");
+  let rdString = "0: " + lastMenu[0];
+  if (menuLevel > 0) rdString += "<br>1: " + lastMenu[1];
+  if (menuLevel > 1) rdString += "<br>2: " + lastMenu[2];
+  if (menuLevel > 2) rdString += "<br>3: " + lastMenu[3];
+  if (menuLevel > 3) rdString += "<br>4: " + lastMenu[4];
+  if (menuLevel > 4) rdString += "<br>5: " + lastMenu[5];
+  if (menuLevel > 5) rdString += "<br>6: " + lastMenu[6];
+  if (menuLevel > 6) rdString += "<br>7: " + lastMenu[7];
+  rd.innerHTML = rdString;
 }
 
 function frameStatusMenuScreen(includeCursor) {
@@ -191,7 +202,6 @@ function handleAnyKeyPress() {
 function setEvent() {
   switch (selectedObject["action"]) {
     case "inBypass":
-      console.log("event into bypass");
       changeLight("light-orange", "light6");
       inBypass = true;
       anyKeyPress = true;
@@ -212,7 +222,6 @@ function setEvent() {
 }
 
 function runSelfTest() {
-  console.log("Running selftest for: " + selectedObject["period"]);
   inSelfTest = true;
   setTimeout(() => changeLight("light-off", "light4"), selectedObject["period"]);
 }
@@ -247,8 +256,6 @@ function editableChoiceScreen() {
 
 function notAvailableYetScreen() {
   anyKeyPress = 1;
-  console.log("notAvailableYetScreen()");
-  console.log(selectedObject);
   return displayScreen();
 }
 
@@ -388,7 +395,6 @@ function manufactureDataScreen() {
 
 function printScreen() {
   onScreen = printSimpleScreen(selectedObject.menu);
-  console.log("heartbeat");
   return onScreen;
 }
 
@@ -569,7 +575,7 @@ function moveArrow(arrowKey) {
       if (cursorPosition < menuSize - 1) cursorPosition++;
       break;
   }
-  printMenus();
+  // printMenus();
 }
 
 function handleEditMode(arrowKey) {
@@ -665,8 +671,6 @@ function setMenu(menuName, level) {
   stopAlternating();
   if (menuName === "Cancel") {
     escapeButton();
-    // } else if (menuName === "On & Ok") {
-    //   console.log("doing nothing");
   } else {
     menuLevel = level;
     lastMenu[menuLevel] = menuName;
@@ -677,7 +681,7 @@ function setMenu(menuName, level) {
     isScrollDownMenu = isAScrollDownMenu(menuName);
     selectedObject = menus[menuName];
     cursorPosition = 0;
-    printMenus();
+    // printMenus();
     startAlternating();
   }
 }
