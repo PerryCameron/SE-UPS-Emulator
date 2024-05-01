@@ -8,6 +8,8 @@ let upsOffAllowed = false;
 let escapeDisable = false;
 let returnDisable = false;
 let helpDisable = false;
+let cursorLock = false;
+let debugMode = true;
 let cursorPosition = 0;
 let choicePosition = 0;
 let menuSize = 0;
@@ -157,6 +159,8 @@ function printTestData() {
   pe.innerText = "Pre-Edit Mode: " + preEditMode;
   let e = document.getElementById("edit");
   e.innerText = "Edit Mode: " + editMode;
+  let cl = document.getElementById("cursor-lock");
+  cl.innerText = "Cursor Lock: " + cursorLock;
 
   let rd = document.getElementById("menu-history");
   let rdString = "0: " + lastMenu[0];
@@ -317,6 +321,7 @@ function selectCursor(includeCursor, cursor) {
 
 // changes menu when static switch is on "UPS Power Control"
 function modeSwitchMenuItemScreen(includeCursor) {
+  if (debugMode) console.log("Function: modeSwitchMenuItemScreen(" + includeCursor + ")");
   menuSize = 4;
   let cursor = [" ", " ", " ", " "];
   selectCursor(includeCursor, cursor);
@@ -331,6 +336,7 @@ function modeSwitchMenuItemScreen(includeCursor) {
 
 // four or more items
 function scrollDownScreen(includeCursor) {
+  if (debugMode) console.log("Function: scrollDownScreen(" + includeCursor + ")");
   let cursor = [" ", " ", " ", " "];
   selectCursor(includeCursor, cursor);
   let onScreen = cursor[0] + selectedObject["menu"][screen[0]] + "\n";
@@ -342,6 +348,7 @@ function scrollDownScreen(includeCursor) {
 
 // four or less items
 function fourScrollScreen(includeCursor) {
+  if (debugMode) console.log("Function: fourScrollScreen(" + includeCursor + ")");
   let cursor = [" ", " ", " ", " "];
   selectCursor(includeCursor, cursor);
   let onScreen = cursor[0] + selectedObject["menu"][screen[0]] + "\n";
@@ -353,6 +360,7 @@ function fourScrollScreen(includeCursor) {
 }
 
 function rawStatusDataScreen() {
+  if (debugMode) console.log("Function: rawStatusDataScreen()");
   let onScreen = "";
   if (lastMenu[5] === "Additional Info") {
     let moduleNumber = menus["Power Modules"]["module"];
@@ -372,6 +380,7 @@ function rawStatusDataScreen() {
 }
 
 function manufactureDataScreen() {
+  if (debugMode) console.log("Function: manufactureDataScreen()");
   // "Manufacturing Data"
   let onScreen = "";
   if (lastMenu[5] === "Main Intel Mod") {
@@ -394,16 +403,19 @@ function manufactureDataScreen() {
 }
 
 function printScreen() {
+  if (debugMode) console.log("Function: printScreen()");
   onScreen = printSimpleScreen(selectedObject.menu);
   return onScreen;
 }
 
 function printSimpleScreen(menu) {
+  if (debugMode) console.log("Function: printSimpleScreen(" + menu + ")");
   // stopAlternating();
   return Object.values(menu).join("\n");
 }
 
 function displayScreen() {
+  if (debugMode) console.log("Function: displayScreen()");
   stopAlternating();
   let onScreen = selectedObject["menu"]["0"] + "\n";
   onScreen += selectedObject["menu"]["1"] + "\n";
@@ -414,6 +426,7 @@ function displayScreen() {
 
 // provides funtionality for power module diagnostic tests
 function moduleChooserScreen(includeCursor) {
+  if (debugMode) console.log("Function: moduleChooserScreen(" + includeCursor + ")");
   menuSize = 3;
   let moduleChoice = selectedObject["module"];
   let module = selectedObject["choice"][moduleChoice];
@@ -453,6 +466,7 @@ function moduleChooserScreen(includeCursor) {
 
 // provides functionality for the battery diagnostic tests
 function batMonChooserScreen(includeCursor) {
+  if (debugMode) console.log("Function: batMonChooserScreen(" + includeCursor + ")");
   menuSize = 3;
   // makes sure choicePosition does not go out of range
   if (editMode === true && choicePosition > 36) choicePosition = 0;
@@ -496,6 +510,7 @@ function batMonChooserScreen(includeCursor) {
 }
 
 function pushOutScreen() {
+  if (debugMode) console.log("Function: pushOutScreen()");
   if (selectedObject["menu"][cursorPosition][0] === "data-block") return dataFedScreen();
   let onScreen = selectedObject["menu"][cursorPosition]["0"] + "\n";
   onScreen += selectedObject["menu"][cursorPosition]["1"] + "\n";
@@ -505,6 +520,7 @@ function pushOutScreen() {
 }
 
 function dataFedScreen() {
+  if (debugMode) console.log("Function: dataFedScreen()");
   let onScreen = "\nNo Data To Show";
   let dataMenu = selectedObject["menu"][cursorPosition][1];
   let i = menus[dataMenu]["input"];
@@ -535,6 +551,7 @@ function dataFedScreen() {
 }
 
 function allInOneScreen(includeCursor) {
+  if (debugMode) console.log("Function: allInOneScreen(" + includeCursor + ")");
   let onScreen = "";
   let cursor = null;
   switch (selectedObject["style"]) {
@@ -557,6 +574,7 @@ function allInOneScreen(includeCursor) {
 }
 
 function labledAllInOneScreen(includeCursor) {
+  if (debugMode) console.log("Function: labeledAllInOneScreen(" + includeCursor + ")");
   let cursor = [" ", " ", " ", " ", " ", " ", " "];
   if (includeCursor) cursor[cursorPosition] = ">";
   let onScreen = selectedObject["label"] + "     " + cursor[3] + selectedObject["menu"]["3"] + "\n";
@@ -567,6 +585,7 @@ function labledAllInOneScreen(includeCursor) {
 }
 
 function moveArrow(arrowKey) {
+  if (debugMode) console.log("Function: moveArrow(" + arrowKey + ")");
   switch (arrowKey) {
     case "up":
       if (cursorPosition > 0) cursorPosition--;
@@ -579,6 +598,7 @@ function moveArrow(arrowKey) {
 }
 
 function handleEditMode(arrowKey) {
+  if (debugMode) console.log("Function: HandleEditMode(" + arrowKey + ")");
   switch (arrowKey) {
     case "up":
       choicePosition++;
@@ -590,11 +610,13 @@ function handleEditMode(arrowKey) {
 }
 
 function abortAction() {
+  if (debugMode) console.log("Function: abortAction()");
   setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
   return "";
 }
 
 function moveScreen(arrowKey) {
+  if (debugMode) console.log("Function: moveScreen()");
   // virtual screen representing what we are looking at
   switch (arrowKey) {
     case "up":
@@ -619,13 +641,15 @@ function moveScreen(arrowKey) {
 }
 
 function escapeButton() {
+  if (debugMode) console.log("Function: escapeButton()");
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
   // if (preEditMode) preEditMode = false;
   else if (editMode) backToNormalMode();
   // else if (escapeDisable);
   else {
-    cursorPosition = 0;
+    // if we are at a dead end screen don't set cursor to 0
+    if (cursorLock === false) cursorPosition = 0;
     switch (menuLevel) {
       case 0: // to all-in-one menu
         setMenu(lastMenu[1], 1);
@@ -638,10 +662,12 @@ function escapeButton() {
 }
 
 function backToNormalMode() {
+  if (debugMode) console.log("Function: backToNormalMode()");
   editMode = false;
 }
 
 function returnButton() {
+  if (debugMode) console.log("Function: returnButton()");
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
   else if (returnDisable);
@@ -668,6 +694,7 @@ function questionMarkButton() {
 }
 
 function setMenu(menuName, level) {
+  if (debugMode) console.log("Function: setMenu(" + menuName + ", " + level + ")");
   stopAlternating();
   if (menuName === "Cancel") {
     escapeButton();
@@ -676,11 +703,13 @@ function setMenu(menuName, level) {
     lastMenu[menuLevel] = menuName;
     if (menus[menuName]["menu"] === undefined) {
       console.log("This menu is undefined");
-    } else console.log(menus[menuName]["menu"]);
+    } else {
+      // console.log(menus[menuName]["menu"]);
+    }
     menuSize = Object.keys(menus[menuName]["menu"]).length;
     isScrollDownMenu = isAScrollDownMenu(menuName);
     selectedObject = menus[menuName];
-    cursorPosition = 0;
+    if (cursorLock === false) cursorPosition = 0;
     // printMenus();
     startAlternating();
   }
