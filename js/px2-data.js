@@ -16,6 +16,10 @@ let menus = {
       2: "never shutdown",
       3: "Press any key...",
     },
+    settings: {
+      alternate: false,
+      resetCursor: false,
+    },
   },
   "top-menu": {
     type: "all-in-one",
@@ -30,21 +34,38 @@ let menus = {
       6: "Admin",
       7: "Help",
     },
+    settings: {
+      alternate: true,
+      resetCursor: false,
+      cursorPosition: 0,
+    },
   },
   "Turn UPS Off": {
     type: "walled-event",
     check: "upsOffAllowed",
     menu: { 0: "Not Allowed" },
+    settings: {
+      alternate: true,
+      resetCursor: false,
+    },
   },
   "Reboot UPS": {
     type: "walled-event",
     check: "upsOffAllowed",
     menu: { 0: "Not Allowed" },
+    settings: {
+      alternate: true,
+      resetCursor: false,
+    },
   },
   "UPS To Sleep": {
     type: "walled-event",
     check: "upsOffAllowed",
     menu: { 0: "Not Allowed" },
+    settings: {
+      alternate: true,
+      resetCursor: false,
+    },
   },
   "YES, Simulate Fail": {
     type: "not-yet-available",
@@ -81,6 +102,10 @@ let menus = {
       2: "UPS Into Bypass",
       3: "UPS To Sleep",
       4: "UPS Out Of Bypass",
+    },
+    settings: {
+      alternate: true,
+      resetCursor: false,
     },
   },
   UPS: {
@@ -283,6 +308,10 @@ let menus = {
       0: "NO, ABORT",
       1: "YES, Into Bypass",
     },
+    settings: {
+      alternate: true,
+      resetCursor: false,
+    },
   },
   "UPS Out Of Bypass": {
     type: "labeled-two-choice",
@@ -458,6 +487,10 @@ let menus = {
       1: " MIM: OK     OK",
       2: " RIM: OK     OK",
       3: "MIM<->RIM: OK",
+    },
+    settings: {
+      alternate: false,
+      resetCursor: false,
     },
   },
   "System Pwr Supplies": {

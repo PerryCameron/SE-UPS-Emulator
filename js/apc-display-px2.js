@@ -8,12 +8,12 @@ let upsOffAllowed = false;
 let escapeDisable = false;
 let returnDisable = false;
 let helpDisable = false;
-let cursorLock = false;
 let debugMode = true;
 let cursorPosition = 0;
 let choicePosition = 0;
 let menuSize = 0;
 let menuLevel = 0;
+let lastMenuLevel = 0;
 let preEditMode = false;
 let editMode = false;
 let intervalId = null;
@@ -34,11 +34,13 @@ window.onload = function () {
 };
 
 function isAScrollDownMenu(menuKey) {
+  if (debugMode) console.log("Function: isAScrollDownMenu(menuKey)");
   if (menus[menuKey]["type"] === "scroll-down") return true;
   else return false;
 }
 
 function startAlternating() {
+  if (debugMode) console.log("Function: startAlternating()");
   if (intervalId === null) {
     intervalId = setInterval(function () {
       textarea.value = toggle ? drawScreen(true) : drawScreen(false);
@@ -49,13 +51,16 @@ function startAlternating() {
 }
 
 function alternateFunction() {
+  if (debugMode) console.log("Function: alternateFunction()");
   if (inBypass) {
     if (toggle) changeLight("light-orange", "light2");
     else changeLight("light-off", "light2");
   }
+  debugMode = false;
 }
 
 function stopAlternating() {
+  if (debugMode) console.log("Function: stopAlternating()");
   if (intervalId != null) {
     clearInterval(intervalId);
     intervalId = null;
@@ -63,6 +68,9 @@ function stopAlternating() {
 }
 
 function upButton() {
+  console.clear();
+  debugMode = true;
+  if (debugMode) console.log("Function: upButton()");
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
   else if (editMode) handleEditMode("up");
@@ -73,6 +81,9 @@ function upButton() {
 }
 
 function downButton() {
+  console.clear();
+  debugMode = true;
+  if (debugMode) console.log("Function: downButton()");
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
   else if (editMode) handleEditMode("down");
@@ -83,13 +94,15 @@ function downButton() {
 }
 
 function drawScreen(includeCursor) {
+  // console.clear();
+  if (debugMode) console.log("Function: drawScreen(includeCursor)");
   // below line of code fixes a bug where if you went into a menu that set
   // preEditMode to true and if you exited, you couldn't drill down into
   // any other menus. This fixes that issue but needed document because this is
   // a super ugly hack, but it works and I am going to keep it
   if (preEditMode & (selectedObject["flag"] != "pre")) preEditMode = false;
   currentFunction = selectedObject["type"];
-  printTestData();
+  if (debugMode) printTestData();
   switch (currentFunction) {
     case "all-in-one":
       return allInOneScreen(includeCursor);
@@ -130,7 +143,7 @@ function drawScreen(includeCursor) {
     case "status-ok":
       console.log("status is ok");
     case "print-simple-screen":
-      return printScreen();
+      return displayScreen();
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -159,8 +172,8 @@ function printTestData() {
   pe.innerText = "Pre-Edit Mode: " + preEditMode;
   let e = document.getElementById("edit");
   e.innerText = "Edit Mode: " + editMode;
-  let cl = document.getElementById("cursor-lock");
-  cl.innerText = "Cursor Lock: " + cursorLock;
+  let lml = document.getElementById("last-menu-level");
+  lml.innerText = "Last Menu Level: " + lastMenuLevel;
 
   let rd = document.getElementById("menu-history");
   let rdString = "0: " + lastMenu[0];
@@ -175,6 +188,7 @@ function printTestData() {
 }
 
 function frameStatusMenuScreen(includeCursor) {
+  if (debugMode) console.log("Function: frameStatusMenuScreen(includeCursor)");
   menuSize = 3;
   let cursor = [" ", " ", " "];
   if (includeCursor) cursor[cursorPosition] = ">";
@@ -186,6 +200,7 @@ function frameStatusMenuScreen(includeCursor) {
 }
 
 function walledEvent() {
+  if (debugMode) console.log("Function: walledEvent()");
   if (!window[selectedObject["check"]]) setMenu("Not Allowed", 5);
   anyKeyPress = true;
   return displayScreen();
@@ -193,6 +208,7 @@ function walledEvent() {
 }
 
 function handleAnyKeyPress() {
+  if (debugMode) console.log("Function: handleAnyKeyPress()");
   switch (lastMenu[menuLevel]) {
     case "Not Allowed":
       setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
@@ -204,6 +220,7 @@ function handleAnyKeyPress() {
 }
 
 function setEvent() {
+  if (debugMode) console.log("Function: setEvent()");
   switch (selectedObject["action"]) {
     case "inBypass":
       changeLight("light-orange", "light6");
@@ -226,11 +243,13 @@ function setEvent() {
 }
 
 function runSelfTest() {
+  if (debugMode) console.log("Function: runSelfTest()");
   inSelfTest = true;
   setTimeout(() => changeLight("light-off", "light4"), selectedObject["period"]);
 }
 
 function changeLight(changeTo, light) {
+  if (debugMode) console.log("Function: changeLight(changeTo, light)");
   document.getElementById(light).classList.remove("light-green");
   document.getElementById(light).classList.remove("light-off");
   document.getElementById(light).classList.remove("light-orange");
@@ -239,6 +258,7 @@ function changeLight(changeTo, light) {
 }
 
 function actionEvent() {
+  if (debugMode) console.log("Function: actionEvent()");
   setTimeout(setEvent, selectedObject["duration"]);
   if (inBypass) return selectedObject["message"];
   else if (!inBypass & (selectedObject["action"] === "outOfBypass")) return selectedObject["message"];
@@ -246,6 +266,7 @@ function actionEvent() {
 }
 
 function editableChoiceScreen() {
+  if (debugMode) console.log("Function: editableChoiceScreen()");
   let onScreen = "";
   let d = selectedObject["menu"]["choices"]["date"];
   let t = selectedObject["menu"]["choices"]["time"];
@@ -259,11 +280,13 @@ function editableChoiceScreen() {
 }
 
 function notAvailableYetScreen() {
+  if (debugMode) console.log("Function: notAvailableYetScreen()");
   anyKeyPress = 1;
   return displayScreen();
 }
 
-function additionalInfoScreen(includeCursor) {
+function additionalInfoScreen() {
+  if (debugMode) console.log("Function: additionalInfoScreen()");
   let onScreen = "";
   if (lastMenu[4] === "Power Modules") {
     selectedObject = menus["Additional Info PM"];
@@ -274,6 +297,7 @@ function additionalInfoScreen(includeCursor) {
 }
 
 function labeledTwoChoiceScreen(includeCursor) {
+  if (debugMode) console.log("Function: labeledTwoChoiceScreen(" + includeCursor + ")");
   menuSize = 2;
   let moduleNumber = menus["Power Modules"]["module"];
   let module = menus["Power Modules"]["choice"][moduleNumber];
@@ -289,6 +313,7 @@ function labeledTwoChoiceScreen(includeCursor) {
 }
 
 function labeledThreeChoiceScreen(includeCursor) {
+  if (debugMode) console.log("Function: labeledThreeChoiceScreen(" + includeCursor + ")");
   menuSize = 3;
   let cursor = [" ", " ", " "];
   if (includeCursor) cursor[cursorPosition] = ">";
@@ -301,6 +326,7 @@ function labeledThreeChoiceScreen(includeCursor) {
 
 // five or more items
 function selectCursor(includeCursor, cursor) {
+  if (debugMode) console.log("Function: selectCursor(" + includeCursor + "," + cursor + ")");
   if (includeCursor) {
     switch (cursorPosition) {
       case screen[0]:
@@ -402,25 +428,14 @@ function manufactureDataScreen() {
   return onScreen;
 }
 
-function printScreen() {
-  if (debugMode) console.log("Function: printScreen()");
-  onScreen = printSimpleScreen(selectedObject.menu);
-  return onScreen;
-}
-
 function printSimpleScreen(menu) {
   if (debugMode) console.log("Function: printSimpleScreen(" + menu + ")");
-  // stopAlternating();
   return Object.values(menu).join("\n");
 }
 
 function displayScreen() {
   if (debugMode) console.log("Function: displayScreen()");
-  stopAlternating();
-  let onScreen = selectedObject["menu"]["0"] + "\n";
-  onScreen += selectedObject["menu"]["1"] + "\n";
-  onScreen += selectedObject["menu"]["2"] + "\n";
-  onScreen += selectedObject["menu"]["3"] + "\n";
+  onScreen = printSimpleScreen(selectedObject.menu);
   return onScreen;
 }
 
@@ -641,6 +656,8 @@ function moveScreen(arrowKey) {
 }
 
 function escapeButton() {
+  console.clear();
+  debugMode = true;
   if (debugMode) console.log("Function: escapeButton()");
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
@@ -649,7 +666,6 @@ function escapeButton() {
   // else if (escapeDisable);
   else {
     // if we are at a dead end screen don't set cursor to 0
-    if (cursorLock === false) cursorPosition = 0;
     switch (menuLevel) {
       case 0: // to all-in-one menu
         setMenu(lastMenu[1], 1);
@@ -667,6 +683,8 @@ function backToNormalMode() {
 }
 
 function returnButton() {
+  console.clear();
+  debugMode = true;
   if (debugMode) console.log("Function: returnButton()");
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
@@ -688,6 +706,7 @@ function returnButton() {
 }
 
 function questionMarkButton() {
+  if (debugMode) console.log("Function: questionMarkButton()");
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
   else console.log("you click the question Mark button");
@@ -699,6 +718,7 @@ function setMenu(menuName, level) {
   if (menuName === "Cancel") {
     escapeButton();
   } else {
+    lastMenuLevel = menuLevel;
     menuLevel = level;
     lastMenu[menuLevel] = menuName;
     if (menus[menuName]["menu"] === undefined) {
@@ -709,9 +729,22 @@ function setMenu(menuName, level) {
     menuSize = Object.keys(menus[menuName]["menu"]).length;
     isScrollDownMenu = isAScrollDownMenu(menuName);
     selectedObject = menus[menuName];
-    if (cursorLock === false) cursorPosition = 0;
-    // printMenus();
-    startAlternating();
+    if (menus[menuName] && menus[menuName].settings) {
+      // printMenus();
+      if (menus[menuName].settings.alternate) {
+        startAlternating();
+        console.log("function: setMenu() alternating: started");
+      } else console.log("function: setMenu() alternating: not started");
+      if (menus[menuName].settings.resetCursor) {
+        cursorPosition = 0;
+        console.log("function: setMenu() cursor position: set to 0");
+      } else console.log("function: setMenu() cursor position: not changed");
+    } else {
+      // default in case data object doesn't have settings
+      console.log("No settings specified: setting to default");
+      startAlternating();
+      cursorPosition = 0;
+    }
   }
 }
 
@@ -719,6 +752,7 @@ var audioContext = new window.AudioContext();
 
 // Function to load and decode audio file
 function loadBeepSound(url) {
+  if (debugMode) console.log("Function: loadBeepSound(url)");
   var request = new XMLHttpRequest();
   request.open("GET", url, true);
   request.responseType = "arraybuffer";
@@ -763,6 +797,7 @@ function playBeep() {
 }
 
 function updateScreen(imageIndex) {
+  if (debugMode) console.log("Function: updateScreen(imageIndex)");
   const basePath = "/../images/dots";
   const container = document.getElementById("viewscreen-div");
   container.innerHTML = "";
@@ -801,6 +836,7 @@ function updateScreen(imageIndex) {
 }
 
 function powerOn() {
+  if (debugMode) console.log("Function: powerOn()");
   const intervals = [300, 600, 900, 1200, 1500, 1800, 3000];
   intervals.forEach((interval, index) => {
     setTimeout(() => updateScreen(index), interval);
