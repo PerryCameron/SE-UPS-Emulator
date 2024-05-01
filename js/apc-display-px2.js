@@ -718,27 +718,40 @@ function setMenu(menuName, level) {
   if (menuName === "Cancel") {
     escapeButton();
   } else {
+    // we will save last menu level
     lastMenuLevel = menuLevel;
+    // change to new menu level
     menuLevel = level;
+    // record new menuLevel to array
     lastMenu[menuLevel] = menuName;
-    if (menus[menuName]["menu"] === undefined) {
-      console.log("This menu is undefined");
-    } else {
-      // console.log(menus[menuName]["menu"]);
-    }
+    // how many elements are in our current Menu
     menuSize = Object.keys(menus[menuName]["menu"]).length;
     isScrollDownMenu = isAScrollDownMenu(menuName);
+    // point to current menu
     selectedObject = menus[menuName];
+    // does this object have settings info?
     if (menus[menuName] && menus[menuName].settings) {
-      // printMenus();
+      // alternate?
       if (menus[menuName].settings.alternate) {
         startAlternating();
         console.log("function: setMenu() alternating: started");
       } else console.log("function: setMenu() alternating: not started");
-      if (menus[menuName].settings.resetCursor) {
+      // we have gone to a deeper level
+      if (menuLevel > lastMenuLevel) {
+        console.log("Last menu was: " + lastMenu[lastMenuLevel]);
+        // save cursor position for last menu
+        menus[lastMenu[lastMenuLevel]].settings.lastCursorPosition = cursorPosition;
+        console.log("(if) function: setMenu() previous screen cursor position: set to " + cursorPosition);
+        // new menu must start fresh
         cursorPosition = 0;
-        console.log("function: setMenu() cursor position: set to 0");
-      } else console.log("function: setMenu() cursor position: not changed");
+      } else if (menuLevel < lastMenuLevel) {
+        cursorPosition = menus[menuName].settings.lastCursorPosition;
+        console.log("(else if) function: setMenu() previous screen cursor position: set to " + cursorPosition);
+      } else {
+        menus[menuName].settings.lastCursorPosition = 0;
+        cursorPosition = 0;
+        console.log("(else) function: setMenu() cursor position: reset to 0");
+      }
     } else {
       // default in case data object doesn't have settings
       console.log("No settings specified: setting to default");

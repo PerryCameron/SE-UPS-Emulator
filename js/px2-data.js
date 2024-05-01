@@ -7,6 +7,10 @@ let menus = {
       2: " L2: 118    L2: 121",
       3: " L3: 129    L3: 120",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Not Allowed": {
     type: "info-any-press",
@@ -18,7 +22,7 @@ let menus = {
     },
     settings: {
       alternate: false,
-      resetCursor: false,
+      lastCursorPosition: 0,
     },
   },
   "top-menu": {
@@ -36,8 +40,7 @@ let menus = {
     },
     settings: {
       alternate: true,
-      resetCursor: false,
-      cursorPosition: 0,
+      lastCursorPosition: 0,
     },
   },
   "Turn UPS Off": {
@@ -46,7 +49,7 @@ let menus = {
     menu: { 0: "Not Allowed" },
     settings: {
       alternate: true,
-      resetCursor: false,
+      lastCursorPosition: 0,
     },
   },
   "Reboot UPS": {
@@ -55,7 +58,7 @@ let menus = {
     menu: { 0: "Not Allowed" },
     settings: {
       alternate: true,
-      resetCursor: false,
+      lastCursorPosition: 0,
     },
   },
   "UPS To Sleep": {
@@ -64,7 +67,7 @@ let menus = {
     menu: { 0: "Not Allowed" },
     settings: {
       alternate: true,
-      resetCursor: false,
+      lastCursorPosition: 0,
     },
   },
   "YES, Simulate Fail": {
@@ -75,6 +78,10 @@ let menus = {
       2: "",
       3: "Press any key...",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "YES, Do Self Test": {
     type: "not-yet-available",
@@ -84,6 +91,10 @@ let menus = {
       2: "",
       3: "Press any key...",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "YES, Start Cal": {
     type: "not-yet-available",
@@ -92,6 +103,10 @@ let menus = {
       1: "For this Emulator",
       2: "",
       3: "Press any key...",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
   },
   "UPS Power Control": {
@@ -105,7 +120,7 @@ let menus = {
     },
     settings: {
       alternate: true,
-      resetCursor: false,
+      lastCursorPosition: 0,
     },
   },
   UPS: {
@@ -116,6 +131,10 @@ let menus = {
       2: "UPS Tests & Diags",
       3: "UPS Configuration",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "UPS Tests & Diags": {
     type: "scroll-down",
@@ -125,6 +144,10 @@ let menus = {
       2: "Battery Modules",
       3: "Other Diagnostics",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Diagnostic Tests": {
     type: "four-scroll",
@@ -132,6 +155,10 @@ let menus = {
       0: "Simulate Power Fail",
       1: "Perform Self Test",
       2: "Start Runtime Cal",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
   },
   "Other Diagnostics": {
@@ -145,6 +172,10 @@ let menus = {
       5: "System Pwr Supplies",
       6: "Comm Modules",
       7: "Aux Device Status",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
   },
   "UPS Status": {
@@ -169,9 +200,17 @@ let menus = {
       11: { 0: "Last transfer cause: ^", 1: "Detection of low", 2: "utility voltage", 3: "" },
     },
   },
+  settings: {
+    alternate: true,
+    lastCursorPosition: 0,
+  },
   "NO, ABORT": {
     type: "abort",
     menu: { 0: "" },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Power Modules": {
     type: "module-chooser",
@@ -206,6 +245,10 @@ let menus = {
       1: "Status:",
       2: "Additional Info",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
     module: "0",
     mode: "0",
   },
@@ -216,6 +259,10 @@ let menus = {
       0: "Frame:",
       1: "Bat Mod:",
       2: "Status:",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
     frame: {
       0: "Main of 2",
@@ -275,6 +322,10 @@ let menus = {
       0: "PM:",
       1: "Raw Status",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Additional Info": {
     // this made to direct to method tree
@@ -282,6 +333,10 @@ let menus = {
     menu: {
       0: "no use",
       1: "no use",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
   },
   "Additional Info PM": {
@@ -292,6 +347,10 @@ let menus = {
       0: "Manufacturing Data",
       1: "Raw Status Data",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Additional Info Frame Status": {
     type: "labeled-two-choice",
@@ -299,6 +358,10 @@ let menus = {
     menu: {
       0: "Manufacturing Data",
       1: "Raw Status Data",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
   },
   "UPS Into Bypass": {
@@ -320,10 +383,18 @@ let menus = {
       0: "NO, ABORT",
       1: "YES, Out Of Bypass",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "YES, Into Bypass": {
     type: "action-event",
     menu: "Putting UPS into\nbypass.\nPlease Wait...",
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
     message: "UPS is now in\nbypass\nPress any key...",
     duration: "1500",
     action: "inBypass",
@@ -331,6 +402,10 @@ let menus = {
   "YES, Out Of Bypass": {
     type: "action-event",
     menu: "Taking UPS out\n of bypass.\nPlease Wait...",
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
     message: "UPS is now out\nof bypass\nPress any key...",
     duration: "1500",
     action: "outOfBypass",
@@ -342,6 +417,10 @@ let menus = {
       0: "NO, ABORT",
       1: "YES, Simulate Fail",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Perform Self Test": {
     type: "labeled-two-choice",
@@ -350,6 +429,10 @@ let menus = {
       0: "NO, ABORT",
       1: "YES, Do Self Test",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Start Runtime Cal": {
     type: "labeled-two-choice",
@@ -357,6 +440,10 @@ let menus = {
     menu: {
       0: "NO, ABORT",
       1: "YES, Start Cal",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
   },
   VoltageData: {
@@ -376,6 +463,10 @@ let menus = {
   "Manufacturing Data": {
     type: "manufacture-data",
     menu: "none",
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
     frame: {
       menu: {
         0: "Frame: 2",
@@ -418,6 +509,10 @@ let menus = {
         2: "0000 1110",
         3: "00000 3E0 3E 0000",
       },
+      settings: {
+        alternate: true,
+        lastCursorPosition: 0,
+      },
     },
     rim: {
       menu: {
@@ -426,6 +521,10 @@ let menus = {
         2: "0000 1110",
         3: "00000 3E0 3E 0000",
       },
+      settings: {
+        alternate: true,
+        lastCursorPosition: 0,
+      },
     },
     frame: {
       menu: {
@@ -433,6 +532,10 @@ let menus = {
         1: "000000000000000000 0",
         2: "0000000DD0DD0DD0DD 0",
         3: "0DD0DD0DD0DD0DD0DD 4",
+      },
+      settings: {
+        alternate: true,
+        lastCursorPosition: 0,
       },
     },
   },
@@ -445,6 +548,10 @@ let menus = {
       1: "Manufacturing Data",
       2: "Raw Status Data",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Redundant Intel Mod": {
     type: "labeled-three-choice",
@@ -455,6 +562,10 @@ let menus = {
       1: "Manufacturing Data",
       2: "Raw Status Data",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Frame Status": {
     type: "frame-status-menu",
@@ -464,12 +575,20 @@ let menus = {
       1: "Battery Subsystems",
       2: "Additional Info",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Battery Subsystems": {
     type: "push-out",
     menu: {
       0: { 0: "Frame: 2", 1: "Battery Monitor Bds", 2: " #1: OK", 3: " #2: OK              {" },
       1: { 0: "DC Breaker / Fuse:   ^", 1: " Closed", 2: "System Power Supply:", 3: " OK" },
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
   },
   "Bypass Switch Mod   {": {
@@ -478,6 +597,10 @@ let menus = {
     menu: {
       0: "Status:On & Ok",
       1: "Manufacturing Data",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
   },
   "Comm Bus Status": {
@@ -501,6 +624,10 @@ let menus = {
       2: " #2: On & OK",
       3: "",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Comm Modules": {
     type: "print-simple-screen",
@@ -510,12 +637,20 @@ let menus = {
       2: "Switchgear Comm Bd:",
       3: " On & OK",
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   "Status: On & OK": {
     type: "status-ok",
     label: "none",
     menu: {
       0: "none",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
     },
   },
 };
