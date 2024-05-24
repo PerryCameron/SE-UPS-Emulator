@@ -199,11 +199,12 @@ let menus = {
       },
       11: { 0: "Last transfer cause: ^", 1: "Detection of low", 2: "utility voltage", 3: "" },
     },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
-  settings: {
-    alternate: true,
-    lastCursorPosition: 0,
-  },
+
   "NO, ABORT": {
     type: "abort",
     menu: { 0: "" },
@@ -612,7 +613,7 @@ let menus = {
       3: "MIM<->RIM: OK",
     },
     settings: {
-      alternate: false,
+      alternate: true,
       resetCursor: false,
     },
   },
@@ -642,15 +643,84 @@ let menus = {
       lastCursorPosition: 0,
     },
   },
-  "Status: On & OK": {
-    type: "status-ok",
+  "Aux Device Status": {
+    type: "print-simple-screen",
     label: "none",
     menu: {
-      0: "none",
+      0: "Battery Breaker Box:",
+      1: " Not Installed",
+      2: "",
+      3: "",
     },
     settings: {
       alternate: true,
       lastCursorPosition: 0,
     },
+  },
+  "UPS Configuration": {
+    type: "all-in-one",
+    style: "labled6",
+    label: "UPS Configuration",
+    menu: {
+      0: "Shutdown",
+      1: "Alarms",
+      2: "Defaults",
+      3: "Output",
+      4: "Bypass",
+      5: "Other",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+  },
+  Shutdown: {
+    type: "setting-choice-screen",
+    flag: "pre",
+    label: "",
+    menu: {
+      0: "Low Bat Dur:",
+      1: "Shutdwn Dly:",
+      2: "Return Dly:",
+      3: "Return Bat Cap:",
+    },
+    "Low Bat Dur": {
+      default: "2",
+      1: "2",
+      2: "5",
+      3: "7",
+      4: "10",
+    },
+    "Shutdwn Dly": {
+      default: "20sec",
+      1: "20sec",
+      2: "180sec",
+      3: "300sec",
+      4: "600sec",
+    },
+    "Return Dly": {
+      default: "0sec",
+      1: "0sec",
+      2: "20sec",
+      3: "60sec",
+      4: "120sec",
+      5: "240sec",
+      6: "480sec",
+      7: "720sec",
+      8: "960sec",
+    },
+    "Return Bat Cap": {
+      default: "0%",
+      1: "0%",
+      2: "15%",
+      3: "50%",
+      4: "90%",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+    module: "0",
+    mode: "0",
   },
 };

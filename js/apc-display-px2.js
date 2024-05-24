@@ -9,6 +9,7 @@ let escapeDisable = false;
 let returnDisable = false;
 let helpDisable = false;
 let debugMode = true;
+let isAlternating = false;
 let cursorPosition = 0;
 let choicePosition = 0;
 let menuSize = 0;
@@ -48,6 +49,8 @@ function startAlternating() {
       toggle = !toggle;
     }, 300);
   }
+  isAlternating = true;
+  printAlternateStatus(); // debug function
 }
 
 function alternateFunction() {
@@ -65,6 +68,8 @@ function stopAlternating() {
     clearInterval(intervalId);
     intervalId = null;
   }
+  isAlternating = false;
+  printAlternateStatus(); // debug function
 }
 
 function upButton() {
@@ -95,7 +100,7 @@ function downButton() {
 
 function drawScreen(includeCursor) {
   // console.clear();
-  if (debugMode) console.log("Function: drawScreen(includeCursor)");
+  if (debugMode) console.log("Function: drawScreen() Current Function: " + currentFunction);
   // below line of code fixes a bug where if you went into a menu that set
   // preEditMode to true and if you exited, you couldn't drill down into
   // any other menus. This fixes that issue but needed document because this is
@@ -144,11 +149,14 @@ function drawScreen(includeCursor) {
       console.log("status is ok");
     case "print-simple-screen":
       return displayScreen();
+    case "setting-choice-screen":
+      return settingChoiceScreen(includeCursor);
     default:
       return scrollDownScreen(includeCursor);
   }
 }
 
+// debug function
 function printTestData() {
   let ml = document.getElementById("menu-level");
   ml.innerText = "Menu Level: " + menuLevel;
@@ -156,8 +164,6 @@ function printTestData() {
   cp.innerText = "Cursor Position: " + cursorPosition;
   let cf = document.getElementById("current-function");
   cf.innerText = "Current Function: " + currentFunction;
-  let t = document.getElementById("toggle");
-  t.innerText = "Toggle: " + toggle;
   let b = document.getElementById("bypass");
   b.innerText = "In Bypass: " + inBypass;
   let s = document.getElementById("self-test");
@@ -187,6 +193,12 @@ function printTestData() {
   rd.innerHTML = rdString;
 }
 
+// debug function
+function printAlternateStatus() {
+  let t = document.getElementById("alternating");
+  t.innerText = "Alternating: " + isAlternating;
+}
+
 function frameStatusMenuScreen(includeCursor) {
   if (debugMode) console.log("Function: frameStatusMenuScreen(includeCursor)");
   menuSize = 3;
@@ -211,6 +223,15 @@ function handleAnyKeyPress() {
   if (debugMode) console.log("Function: handleAnyKeyPress()");
   switch (lastMenu[menuLevel]) {
     case "Not Allowed":
+      setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
+      break;
+    case "YES, Simulate Fail":
+      setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
+      break;
+    case "YES, Do Self Test":
+      setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
+      break;
+    case "YES, Start Cal":
       setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
       break;
     default:
@@ -365,10 +386,10 @@ function scrollDownScreen(includeCursor) {
   if (debugMode) console.log("Function: scrollDownScreen(" + includeCursor + ")");
   let cursor = [" ", " ", " ", " "];
   selectCursor(includeCursor, cursor);
-  let onScreen = cursor[0] + selectedObject["menu"][screen[0]] + "\n";
-  onScreen += cursor[1] + selectedObject["menu"][screen[0] + 1] + "\n";
-  onScreen += cursor[2] + selectedObject["menu"][screen[0] + 2] + "\n";
-  onScreen += cursor[3] + selectedObject["menu"][screen[0] + 3] + "\n";
+  let onScreen = cursor[0] + selectedObject["menu"][+screen[0]] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][+screen[0] + 1] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][+screen[0] + 2] + "\n";
+  onScreen += cursor[3] + selectedObject["menu"][+screen[0] + 3] + "\n";
   return onScreen;
 }
 
@@ -439,6 +460,58 @@ function displayScreen() {
   return onScreen;
 }
 
+// provides funtionality for shutdown
+function settingChoiceScreen(includeCursor) {
+  if (debugMode) console.log("Function: settingChoiceScreen(" + includeCursor + ")");
+  menuSize = 4;
+  let cursor = [" ", " ", " ", " "];
+  let arrowCursor = [" ", " ", " ", " "];
+  // below handles all cursor positions
+  if (includeCursor) {
+    returnDisable = false;
+    preEditMode = true; // probably put to false under escape
+    editMode ? (arrowCursor[cursorPosition] = "}") : ((cursor[cursorPosition] = ">"), (choicePosition = 1));
+    escapeDisable = false;
+  }
+  if (editMode) {
+    switch (cursorPosition) {
+      case 0:
+        setChoicePositionLimits(1, 4);
+        setDefault("Low Bat Dur");
+        break;
+      case 1:
+        setChoicePositionLimits(1, 4);
+        setDefault("Shutdwn Dly");
+        break;
+      case 2:
+        setChoicePositionLimits(1, 8);
+        setDefault("Return Dly");
+        break;
+      case 3:
+        setChoicePositionLimits(1, 4);
+        setDefault("Return Bat Cap");
+        break;
+    }
+    // use new function here
+  }
+  let onScreen =
+    cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + selectedObject["Low Bat Dur"]["default"] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][1] + arrowCursor[1] + selectedObject["Shutdwn Dly"]["default"] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][2] + arrowCursor[2] + selectedObject["Return Dly"]["default"] + "\n";
+  onScreen +=
+    cursor[3] + selectedObject["menu"][3] + arrowCursor[3] + selectedObject["Return Bat Cap"]["default"] + "\n";
+  return onScreen;
+}
+
+function setDefault(option) {
+  selectedObject[option]["default"] = selectedObject[option][choicePosition];
+}
+
+function setChoicePositionLimits(start, end) {
+  if (choicePosition > end) choicePosition = start;
+  if (choicePosition < start) choicePosition = end;
+}
+
 // provides funtionality for power module diagnostic tests
 function moduleChooserScreen(includeCursor) {
   if (debugMode) console.log("Function: moduleChooserScreen(" + includeCursor + ")");
@@ -468,8 +541,8 @@ function moduleChooserScreen(includeCursor) {
         escapeDisable = false;
         break;
     }
-  } else if (editMode === true) {
-    if (choicePosition > 9) choicePosition = 0; // reset us back around (should be choice length -1)
+  } else if (editMode) {
+    setChoicePositionLimits(0, 9);
     selectedObject["module"] = choicePosition; // choicePosition is global !!!READ THIS TO UNDERSTAND!!!
   }
   let onScreen = selectedObject["label"] + "\n";
@@ -584,6 +657,15 @@ function allInOneScreen(includeCursor) {
       onScreen = cursor[0] + selectedObject["menu"]["0"] + "   " + cursor[3] + selectedObject["menu"]["3"] + "\n";
       onScreen += cursor[1] + selectedObject["menu"]["1"] + "    " + cursor[4] + selectedObject["menu"]["4"] + "\n";
       onScreen += cursor[2] + selectedObject["menu"]["2"] + " " + cursor[5] + selectedObject["menu"]["5"] + "\n";
+      break;
+    case "labled6":
+      cursor = [" ", " ", " ", " ", " ", " "];
+      if (includeCursor) cursor[cursorPosition] = ">";
+      onScreen = selectedObject["label"] + "\n";
+      onScreen += cursor[0] + selectedObject["menu"]["0"] + "   " + cursor[3] + selectedObject["menu"]["3"] + "\n";
+      onScreen += cursor[1] + selectedObject["menu"]["1"] + "     " + cursor[4] + selectedObject["menu"]["4"] + "\n";
+      onScreen += cursor[2] + selectedObject["menu"]["2"] + "   " + cursor[5] + selectedObject["menu"]["5"] + "\n";
+      break;
   }
   return onScreen;
 }
@@ -687,9 +769,9 @@ function returnButton() {
   debugMode = true;
   if (debugMode) console.log("Function: returnButton()");
   playBeep();
-  if (anyKeyPress) handleAnyKeyPress();
-  else if (returnDisable);
-  else if (editMode) {
+  if (anyKeyPress) {
+    handleAnyKeyPress();
+  } else if (editMode) {
     backToNormalMode();
   } else if (preEditMode) {
     editMode = true;
@@ -699,10 +781,22 @@ function returnButton() {
     if (inBypass && selectedObject["menu"][4] === "UPS Out Of Bypass")
       menuName = selectedObject["menu"][cursorPosition + 2];
     // this is default
-    else menuName = selectedObject["menu"][cursorPosition];
+    else {
+      if (menuItemIsNotIgnored(selectedObject["menu"][cursorPosition]))
+        menuName = selectedObject["menu"][cursorPosition];
+    }
     selectedObject = menuName;
+    console.log("Menu Name: " + menuName);
     if (menuLevel != 0) setMenu(menuName, menuLevel + 1);
   }
+}
+
+function menuItemIsNotIgnored(item) {
+  if (item === "Status:On & Ok") {
+    if (debugMode) console.log("Function: menuItemIsNotIgnored(): ignored");
+    return false;
+  }
+  return true;
 }
 
 function questionMarkButton() {
@@ -738,7 +832,6 @@ function setMenu(menuName, level) {
       } else console.log("function: setMenu() alternating: not started");
       // we have gone to a deeper level
       if (menuLevel > lastMenuLevel) {
-        console.log("Last menu was: " + lastMenu[lastMenuLevel]);
         // save cursor position for last menu
         menus[lastMenu[lastMenuLevel]].settings.lastCursorPosition = cursorPosition;
         console.log("(if) function: setMenu() previous screen cursor position: set to " + cursorPosition);
