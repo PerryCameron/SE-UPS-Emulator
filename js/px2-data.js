@@ -676,8 +676,7 @@ let menus = {
   },
   Shutdown: {
     type: "setting-choice-screen",
-    flag: "pre",
-    label: "",
+    flag: "pre", // This is important for selection cursors to work on all alternations
     menu: {
       0: "Low Bat Dur:",
       1: "Shutdwn Dly:",
@@ -716,11 +715,54 @@ let menus = {
       3: "50%",
       4: "90%",
     },
-    settings: {
-      alternate: true,
-      lastCursorPosition: 0,
+    mode: "0",
+  },
+  Alarms: {
+    type: "configuration-alarm-Screen",
+    flag: "pre", // This is important for selection cursors to work on all alternations
+    label: "Alarm Thresholds",
+    menu: {
+      0: "Redundancy: ",
+      1: "Load:",
+      2: "Runtime:",
     },
-    module: "0",
+    Redundancy: {
+      default: "Never",
+      1: "Never",
+      2: "N+1",
+      3: "N+2",
+    },
+    Load: {
+      default: "Never",
+      1: "Never",
+      2: "10kVA",
+      3: "20kVA",
+      4: "30kVA",
+      5: "40kVA",
+      6: "50kVA",
+      7: "60kVA",
+      8: "70kVA",
+      9: "80kVA",
+      10: "90kVA",
+      11: "100kVA",
+    },
+    Runtime: {
+      default: "Never",
+      1: "Never",
+      2: "5min",
+      3: "10min",
+      4: "15min",
+      5: "30min",
+      6: "45min",
+      7: "1hr 0min",
+      8: "2hr 0min",
+      9: "3hr 0min",
+      10: "4hr 0min",
+      11: "5hr 0min",
+      12: "6hr 0min",
+      13: "7hr 0min",
+      14: "8hr 0min",
+    },
     mode: "0",
   },
 };

@@ -151,6 +151,8 @@ function drawScreen(includeCursor) {
       return displayScreen();
     case "setting-choice-screen":
       return settingChoiceScreen(includeCursor);
+    case "configuration-alarm-Screen":
+      return configurationAlarmScreen(includeCursor);
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -457,6 +459,43 @@ function printSimpleScreen(menu) {
 function displayScreen() {
   if (debugMode) console.log("Function: displayScreen()");
   onScreen = printSimpleScreen(selectedObject.menu);
+  return onScreen;
+}
+
+// provides funtionality for UPS Configuration > Alarms
+function configurationAlarmScreen(includeCursor) {
+  if (debugMode) console.log("Function: configurationAlarmScreen(" + includeCursor + ")");
+  menuSize = 3;
+  let cursor = [" ", " ", " "];
+  let arrowCursor = [" ", " ", " "];
+  // below handles all cursor positions
+  if (includeCursor) {
+    returnDisable = false;
+    preEditMode = true; // probably put to false under escape
+    editMode ? (arrowCursor[cursorPosition] = "}") : ((cursor[cursorPosition] = ">"), (choicePosition = 1));
+    escapeDisable = false;
+  }
+  if (editMode) {
+    switch (cursorPosition) {
+      case 0:
+        setChoicePositionLimits(1, 3);
+        setDefault("Redundancy");
+        break;
+      case 1:
+        setChoicePositionLimits(1, 11);
+        setDefault("Load");
+        break;
+      case 2:
+        setChoicePositionLimits(1, 14);
+        setDefault("Runtime");
+        break;
+    }
+    // use new function here
+  }
+  let onScreen = selectedObject["label"] + "\n";
+  onScreen += cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + selectedObject["Redundancy"]["default"] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][1] + arrowCursor[1] + selectedObject["Load"]["default"] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][2] + arrowCursor[2] + selectedObject["Runtime"]["default"] + "\n";
   return onScreen;
 }
 
