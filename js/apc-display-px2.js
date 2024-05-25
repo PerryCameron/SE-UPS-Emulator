@@ -117,6 +117,9 @@ function drawScreen(includeCursor) {
       return scrollDownScreen(includeCursor);
     case "labeled-two-choice":
       return labeledTwoChoiceScreen(includeCursor);
+    case "configuration-defaults":
+      return configurationDefaults(includeCursor);
+
     case "action-event":
       return actionEvent();
     case "information":
@@ -153,6 +156,8 @@ function drawScreen(includeCursor) {
       return settingChoiceScreen(includeCursor);
     case "configuration-alarm-Screen":
       return configurationAlarmScreen(includeCursor);
+    case "configuration-output-screen":
+      return configurationOutputScreen(includeCursor);
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -236,6 +241,10 @@ function handleAnyKeyPress() {
     case "YES, Start Cal":
       setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
       break;
+    case "Output":
+      setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
+      cursorPosition = 3;
+      break;
     default:
       setMenu("top-menu", 2);
   }
@@ -316,6 +325,22 @@ function additionalInfoScreen() {
   } else if (lastMenu[5] === "Frame Status") {
     selectedObject = menus["Additional Info Frame Status"];
   }
+  return onScreen;
+}
+
+function configurationDefaults(includeCursor) {
+  if (debugMode) console.log("Function: labeledTwoChoiceScreen(" + includeCursor + ")");
+  menuSize = 2;
+  let moduleNumber = menus["Power Modules"]["module"];
+  let module = menus["Power Modules"]["choice"][moduleNumber];
+  let cursor = [" ", " "];
+  if (includeCursor) cursor[cursorPosition] = ">";
+  let onScreen = selectedObject["label"];
+  if (selectedObject["data"] === "Power Modules") {
+    onScreen += module["mod"] + " at " + module["loc"];
+  }
+  onScreen += "\n" + cursor[0] + selectedObject["menu"][0] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][1];
   return onScreen;
 }
 
@@ -460,6 +485,58 @@ function displayScreen() {
   if (debugMode) console.log("Function: displayScreen()");
   onScreen = printSimpleScreen(selectedObject.menu);
   return onScreen;
+}
+
+// provides funtionality for UPS Configuration > Output
+function configurationOutputScreen(includeCursor) {
+  if (debugMode) console.log("Function: configurationAlarmScreen(" + includeCursor + ")");
+  menuSize = 3;
+  let cursor = [" ", " ", " "];
+  let arrowCursor = [" ", " ", " "];
+  // below handles all cursor positions
+  if (includeCursor) {
+    returnDisable = false;
+    preEditMode = true; // probably put to false under escape
+    editMode ? (arrowCursor[cursorPosition] = "}") : ((cursor[cursorPosition] = ">"), (choicePosition = 1));
+    escapeDisable = false;
+  }
+  if (editMode) {
+    switch (cursorPosition) {
+      case 0:
+        if (inBypass) {
+          setChoicePositionLimits(1, 2);
+          setDefault("Voltage");
+        } else {
+          anyKeyPress = true;
+          return printOutputLockOutScreen();
+        }
+        // show screen that it can't do it
+        break;
+      case 1:
+        if (inBypass) {
+          setChoicePositionLimits(1, 2);
+          setDefault("Freq");
+        } else {
+          anyKeyPress = true;
+          return printOutputLockOutScreen();
+        }
+        break;
+      case 2:
+        setChoicePositionLimits(1, 6);
+        setDefault("Slew Rate");
+        break;
+    }
+    // use new function here
+  }
+  let onScreen = selectedObject["label"] + "\n";
+  onScreen += cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + selectedObject["Voltage"]["default"] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][1] + arrowCursor[1] + selectedObject["Freq"]["default"] + "\n";
+  onScreen += cursor[2] + selectedObject["menu"][2] + arrowCursor[2] + selectedObject["Slew Rate"]["default"] + "\n";
+  return onScreen;
+}
+
+function printOutputLockOutScreen() {
+  return "This setting cannot\nbe changed while the\nUPS output is on.\nPress any key...";
 }
 
 // provides funtionality for UPS Configuration > Alarms

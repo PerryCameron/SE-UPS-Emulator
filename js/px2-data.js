@@ -83,6 +83,19 @@ let menus = {
       lastCursorPosition: 0,
     },
   },
+  "YES, Set Defaults": {
+    type: "not-yet-available",
+    menu: {
+      0: "Not yet Implemented",
+      1: "For this Emulator",
+      2: "",
+      3: "Press any key...",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+  },
   "YES, Do Self Test": {
     type: "not-yet-available",
     menu: {
@@ -371,6 +384,18 @@ let menus = {
     menu: {
       0: "NO, ABORT",
       1: "YES, Into Bypass",
+    },
+    settings: {
+      alternate: true,
+      resetCursor: false,
+    },
+  },
+  Defaults: {
+    type: "configuration-defaults",
+    label: "Set ALL UPS Settings\nTo Factory Defaults?",
+    menu: {
+      0: "NO, ABORT",
+      1: "YES, Set Defaults",
     },
     settings: {
       alternate: true,
@@ -762,6 +787,44 @@ let menus = {
       12: "6hr 0min",
       13: "7hr 0min",
       14: "8hr 0min",
+    },
+    mode: "0",
+  },
+  Output: {
+    type: "configuration-output-screen",
+    flag: "pre", // This is important for selection cursors to work on all alternations
+    label: "Output Settings",
+    menu: {
+      0: "Voltage: ",
+      1: "Freq:",
+      2: "Slew Rate:",
+    },
+    Voltage: {
+      default: "208V",
+      1: "208V",
+      2: "240V",
+      // This setting cannot
+      // be changed while the
+      // UPS output is on.
+      // Press any key...
+    },
+    Freq: {
+      default: "60+/-10 Hz",
+      1: "60+/-10 Hz",
+      2: "50+/-10 Hz",
+      // This setting cannot
+      // be changed while the
+      // UPS output is on.
+      // Press any key...
+    },
+    "Slew Rate": {
+      default: "1.00Hz/s",
+      1: "1.00Hz/s",
+      2: "2.00Hz/s",
+      3: "4.00Hz/s",
+      4: "6.00Hz/s",
+      5: "0.25Hz/s",
+      6: "0.50Hz/s",
     },
     mode: "0",
   },
