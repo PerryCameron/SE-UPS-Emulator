@@ -162,6 +162,19 @@ let menus = {
       lastCursorPosition: 0,
     },
   },
+  Environment: {
+    type: "scroll-down",
+    menu: {
+      0: "Input Contacts",
+      1: "Output Relays",
+      2: "Alarm Relay Map",
+      // 3: "test",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+  },
   "Diagnostic Tests": {
     type: "four-scroll",
     menu: {
@@ -360,6 +373,19 @@ let menus = {
     menu: {
       0: "Manufacturing Data",
       1: "Raw Status Data",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+  },
+  Switchgear: {
+    type: "labeled-two-choice",
+    label: "Switchgear ",
+    data: "",
+    menu: {
+      0: "Status",
+      1: "Factory",
     },
     settings: {
       alternate: true,
@@ -629,6 +655,19 @@ let menus = {
       lastCursorPosition: 0,
     },
   },
+  "Testing this ": {
+    type: "print-simple-screen",
+    menu: {
+      0: "This setting cannot",
+      1: "be changed while the",
+      2: "UPS output is on",
+      3: "Press any key...",
+    },
+    settings: {
+      alternate: true,
+      resetCursor: false,
+    },
+  },
   "Comm Bus Status": {
     type: "print-simple-screen",
     menu: {
@@ -642,13 +681,26 @@ let menus = {
       resetCursor: false,
     },
   },
+  Status: {
+    type: "print-simple-screen",
+    menu: {
+      0: "Q1&Q2: UPS Connected",
+      1: "Q3: Bypass Open",
+      2: "Mode:",
+      3: " UPS Operation",
+    },
+    settings: {
+      alternate: true,
+      resetCursor: false,
+    },
+  },
   "System Pwr Supplies": {
     type: "print-simple-screen",
     menu: {
       0: "System Pwr Supplies",
       1: " #1: On & OK",
       2: " #2: On & OK",
-      3: "",
+      3: " UPS Operation",
     },
     settings: {
       alternate: true,
@@ -741,6 +793,10 @@ let menus = {
       4: "90%",
     },
     mode: "0",
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   Alarms: {
     type: "configuration-alarm-Screen",
@@ -789,6 +845,10 @@ let menus = {
       14: "8hr 0min",
     },
     mode: "0",
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
   Output: {
     type: "configuration-output-screen",
@@ -827,5 +887,65 @@ let menus = {
       6: "0.50Hz/s",
     },
     mode: "0",
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+  },
+  Bypass: {
+    type: "configuration-bypass-screen",
+    flag: "pre", // This is important for selection cursors to work on all alternations
+    label: "",
+    menu: {
+      0: "If UPS fails and\nline freq or voltage\nis out of normal\nrange:",
+    },
+    Action: {
+      default: "Go To Bypass",
+      1: "Go To Bypass",
+      2: "Drop Load",
+    },
+    mode: "0",
+  },
+  settings: {
+    alternate: true,
+    lastCursorPosition: 0,
+  },
+  Other: {
+    type: "configuration-other-screen",
+    flag: "pre", // This is important for selection cursors to work on all alternations
+    label: "Output Settings",
+    menu: {
+      0: "Self Test: ",
+      1: "UPS_ID:",
+      2: "BatFrmAmpHour:",
+      3: "Charger Rate:",
+    },
+    "Self Test": {
+      default: "12 Weeks",
+      1: "12 Weeks",
+      2: "Never",
+      3: "Start Up",
+      4: "7 Days",
+      5: "14 Days",
+      6: "4 Weeks",
+    },
+    "UPS ID": {
+      default: "SYMM_PX2",
+      1: "SYMM_PX2",
+    },
+    BatFrmAmpHour: {
+      default: "0",
+      1: "0000",
+    },
+    "Charger Rate": {
+      default: "Low",
+      1: "Low",
+      2: "High",
+    },
+    mode: "0",
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
   },
 };

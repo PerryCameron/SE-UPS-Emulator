@@ -119,7 +119,8 @@ function drawScreen(includeCursor) {
       return labeledTwoChoiceScreen(includeCursor);
     case "configuration-defaults":
       return configurationDefaults(includeCursor);
-
+    case "configuration-bypass-screen":
+      return configurationBypassScreen(includeCursor);
     case "action-event":
       return actionEvent();
     case "information":
@@ -158,10 +159,13 @@ function drawScreen(includeCursor) {
       return configurationAlarmScreen(includeCursor);
     case "configuration-output-screen":
       return configurationOutputScreen(includeCursor);
+    case "configuration-other-screen":
+      return congigurationOtherScreen(includeCursor);
     default:
       return scrollDownScreen(includeCursor);
   }
 }
+// this is a test
 
 // debug function
 function printTestData() {
@@ -242,8 +246,9 @@ function handleAnyKeyPress() {
       setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
       break;
     case "Output":
-      setMenu(lastMenu[menuLevel - 2], menuLevel - 2);
+      setMenu(lastMenu[3], (menuLevel = 4));
       cursorPosition = 3;
+      editMode = false;
       break;
     default:
       setMenu("top-menu", 2);
@@ -487,6 +492,32 @@ function displayScreen() {
   return onScreen;
 }
 
+function configurationBypassScreen(includeCursor) {
+  if (debugMode) console.log("Function: configurationBypassScreen(" + includeCursor + ")");
+  menuSize = 1;
+  let cursor = [" "];
+  let arrowCursor = [" "];
+  // below handles all cursor positions
+  if (includeCursor) {
+    returnDisable = false;
+    preEditMode = true; // probably put to false under escape
+    editMode ? (arrowCursor[cursorPosition] = "}") : ((cursor[cursorPosition] = ">"), (choicePosition = 1));
+    escapeDisable = false;
+  }
+  if (editMode) {
+    switch (cursorPosition) {
+      case 0:
+        setChoicePositionLimits(1, 2);
+        setDefault("Action");
+        break;
+    }
+    // use new function here
+  }
+  let onScreen = cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + selectedObject["Action"]["default"] + "\n";
+
+  return onScreen;
+}
+
 // provides funtionality for UPS Configuration > Output
 function configurationOutputScreen(includeCursor) {
   if (debugMode) console.log("Function: configurationAlarmScreen(" + includeCursor + ")");
@@ -537,6 +568,48 @@ function configurationOutputScreen(includeCursor) {
 
 function printOutputLockOutScreen() {
   return "This setting cannot\nbe changed while the\nUPS output is on.\nPress any key...";
+}
+
+// provides funtionality for UPS Configuration > Other
+function congigurationOtherScreen(includeCursor) {
+  if (debugMode) console.log("Function: congigurationOtherScreen(" + includeCursor + ")");
+  menuSize = 4;
+  let cursor = [" ", " ", " ", " "];
+  let arrowCursor = [" ", " ", " ", " "];
+  // below handles all cursor positions
+  if (includeCursor) {
+    returnDisable = false;
+    preEditMode = true; // probably put to false under escape
+    editMode ? (arrowCursor[cursorPosition] = "}") : ((cursor[cursorPosition] = ">"), (choicePosition = 1));
+    escapeDisable = false;
+  }
+  if (editMode) {
+    switch (cursorPosition) {
+      case 0:
+        setChoicePositionLimits(1, 6);
+        setDefault("Self Test");
+        break;
+      case 1:
+        setChoicePositionLimits(1, 1);
+        setDefault("UPS ID");
+        break;
+      case 2:
+        setChoicePositionLimits(1, 1);
+        setDefault("BatFrmAmpHour");
+        break;
+      case 3:
+        setChoicePositionLimits(1, 2);
+        setDefault("Charger Rate");
+        break;
+    }
+    // use new function here
+  }
+  let onScreen = cursor[0] + selectedObject["menu"][0] + arrowCursor[0] + selectedObject["Self Test"]["default"] + "\n";
+  onScreen += cursor[1] + selectedObject["menu"][1] + arrowCursor[1] + selectedObject["UPS ID"]["default"] + "\n";
+  onScreen +=
+    cursor[2] + selectedObject["menu"][2] + arrowCursor[2] + selectedObject["BatFrmAmpHour"]["default"] + "\n";
+  onScreen += cursor[3] + selectedObject["menu"][3] + arrowCursor[3] + selectedObject["Charger Rate"]["default"] + "\n";
+  return onScreen;
 }
 
 // provides funtionality for UPS Configuration > Alarms
@@ -859,7 +932,6 @@ function escapeButton() {
   if (debugMode) console.log("Function: escapeButton()");
   playBeep();
   if (anyKeyPress) handleAnyKeyPress();
-  // if (preEditMode) preEditMode = false;
   else if (editMode) backToNormalMode();
   // else if (escapeDisable);
   else {
@@ -955,6 +1027,7 @@ function setMenu(menuName, level) {
         cursorPosition = 0;
       } else if (menuLevel < lastMenuLevel) {
         cursorPosition = menus[menuName].settings.lastCursorPosition;
+        console.log("menuname: " + menuName);
         console.log("(else if) function: setMenu() previous screen cursor position: set to " + cursorPosition);
       } else {
         menus[menuName].settings.lastCursorPosition = 0;
