@@ -19,7 +19,7 @@ let preEditMode = false;
 let editMode = false;
 let intervalId = null;
 let lastMenu = ["Default", "top-menu", "level 2", "level 3", "level 4", "level 5", "level 6", "level 7"];
-let selectedObject = menus["Default"];
+let selectedObject = data["Default"];
 let textarea = document.createElement("textarea");
 let currentFunction = "";
 textarea.className = "screen-area";
@@ -36,7 +36,7 @@ window.onload = function () {
 
 function isAScrollDownMenu(menuKey) {
   if (debugMode) console.log("Function: isAScrollDownMenu(menuKey)");
-  if (menus[menuKey]["type"] === "scroll-down") return true;
+  if (data[menuKey]["type"] === "scroll-down") return true;
   else return false;
 }
 
@@ -141,6 +141,7 @@ function drawScreen(includeCursor) {
       return rawStatusDataScreen();
     case "bat-mon-chooser":
       return batMonChooserScreen(includeCursor);
+
     case "mode-switch-menu-item":
       return modeSwitchMenuItemScreen(includeCursor);
     case "four-scroll":
@@ -161,6 +162,11 @@ function drawScreen(includeCursor) {
       return configurationOutputScreen(includeCursor);
     case "configuration-other-screen":
       return congigurationOtherScreen(includeCursor);
+    case "status-normal-view":
+      return statusNormalView();
+    case "input-contacts-chooser":
+      return inputContactChooserScreen(includeCursor);
+
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -326,9 +332,9 @@ function additionalInfoScreen() {
   if (debugMode) console.log("Function: additionalInfoScreen()");
   let onScreen = "";
   if (lastMenu[4] === "Power Modules") {
-    selectedObject = menus["Additional Info PM"];
+    selectedObject = data["Additional Info PM"];
   } else if (lastMenu[5] === "Frame Status") {
-    selectedObject = menus["Additional Info Frame Status"];
+    selectedObject = data["Additional Info Frame Status"];
   }
   return onScreen;
 }
@@ -336,8 +342,8 @@ function additionalInfoScreen() {
 function configurationDefaults(includeCursor) {
   if (debugMode) console.log("Function: labeledTwoChoiceScreen(" + includeCursor + ")");
   menuSize = 2;
-  let moduleNumber = menus["Power Modules"]["module"];
-  let module = menus["Power Modules"]["choice"][moduleNumber];
+  let moduleNumber = data["Power Modules"]["module"];
+  let module = data["Power Modules"]["choice"][moduleNumber];
   let cursor = [" ", " "];
   if (includeCursor) cursor[cursorPosition] = ">";
   let onScreen = selectedObject["label"];
@@ -352,8 +358,8 @@ function configurationDefaults(includeCursor) {
 function labeledTwoChoiceScreen(includeCursor) {
   if (debugMode) console.log("Function: labeledTwoChoiceScreen(" + includeCursor + ")");
   menuSize = 2;
-  let moduleNumber = menus["Power Modules"]["module"];
-  let module = menus["Power Modules"]["choice"][moduleNumber];
+  let moduleNumber = data["Power Modules"]["module"];
+  let module = data["Power Modules"]["choice"][moduleNumber];
   let cursor = [" ", " "];
   if (includeCursor) cursor[cursorPosition] = ">";
   let onScreen = selectedObject["label"];
@@ -442,18 +448,18 @@ function rawStatusDataScreen() {
   if (debugMode) console.log("Function: rawStatusDataScreen()");
   let onScreen = "";
   if (lastMenu[5] === "Additional Info") {
-    let moduleNumber = menus["Power Modules"]["module"];
-    let module = menus["Power Modules"]["Raw Status"][moduleNumber];
+    let moduleNumber = data["Power Modules"]["module"];
+    let module = data["Power Modules"]["Raw Status"][moduleNumber];
     onScreen = "PM: " + moduleNumber + " Raw Status\n";
     onScreen += module["RS1"] + "\n";
     onScreen += module["RS2"] + "\n";
     onScreen += module["RS3"] + "\n";
   } else if (lastMenu[5] === "Main Intel Mod") {
-    onScreen = printSimpleScreen(menus["Raw Status"]["mim"].menu);
+    onScreen = printSimpleScreen(data["Raw Status"]["mim"].menu);
   } else if (lastMenu[5] === "Redundant Intel Mod") {
-    onScreen = printSimpleScreen(menus["Raw Status"]["rim"].menu);
+    onScreen = printSimpleScreen(data["Raw Status"]["rim"].menu);
   } else if (lastMenu[5] === "Frame Status") {
-    onScreen = printSimpleScreen(menus["Raw Status"]["frame"].menu);
+    onScreen = printSimpleScreen(data["Raw Status"]["frame"].menu);
   }
   return onScreen;
 }
@@ -463,21 +469,36 @@ function manufactureDataScreen() {
   // "Manufacturing Data"
   let onScreen = "";
   if (lastMenu[5] === "Main Intel Mod") {
-    onScreen = printSimpleScreen(menus["Manufacturing Data"]["mim"].menu);
+    onScreen = printSimpleScreen(data["Manufacturing Data"]["mim"].menu);
   } else if (lastMenu[5] === "Frame Status") {
-    onScreen = printSimpleScreen(menus["Manufacturing Data"]["frame"].menu);
+    onScreen = printSimpleScreen(data["Manufacturing Data"]["frame"].menu);
   } else if (lastMenu[5] === "Redundant Intel Mod") {
-    onScreen = printSimpleScreen(menus["Manufacturing Data"]["rim"].menu);
+    onScreen = printSimpleScreen(data["Manufacturing Data"]["rim"].menu);
   } else if (lastMenu[5] === "Bypass Switch Mod   {") {
-    onScreen = printSimpleScreen(menus["Manufacturing Data"]["bypass"].menu);
+    onScreen = printSimpleScreen(data["Manufacturing Data"]["bypass"].menu);
   } else if (lastMenu[4] === "Power Modules") {
-    let moduleNumber = menus["Power Modules"]["module"];
-    let module = menus["Power Modules"]["choice"][moduleNumber];
+    let moduleNumber = data["Power Modules"]["module"];
+    let module = data["Power Modules"]["choice"][moduleNumber];
     onScreen = "PM: " + module["mod"] + " Frame: Main\n";
     onScreen += "FW: " + module["FW"] + "     HW: " + module["HW"] + "\n";
     onScreen += "SN: " + module["SN"] + "\n";
     onScreen += "Mfg Date: " + module["mdate"] + "\n";
   }
+  return onScreen;
+}
+
+function statusNormalView() {
+  if (debugMode) console.log("Function: statusNormalView()");
+  // 0: "User Contact",
+  // 1: "Status:",
+  // 2: "Normal:",
+  // 3: "State:",
+  let level = data["Status: Normal"].level;
+  selectedObject["menu"][0] = "User Contact " + level;
+  selectedObject["menu"][1] = "Status: Normal";
+  selectedObject["menu"][2] = "Normal: " + data["Input Contacts"]["normal"][level]; // data["Input Contacts"]
+  selectedObject["menu"][3] = "State: Open";
+  onScreen = printSimpleScreen(selectedObject.menu);
   return onScreen;
 }
 
@@ -741,6 +762,56 @@ function moduleChooserScreen(includeCursor) {
   return onScreen;
 }
 
+// provides functionality for the Input Contact settings
+function inputContactChooserScreen(includeCursor) {
+  if (debugMode) console.log("Function: inputContactChooserScreen(" + includeCursor + ")");
+  menuSize = 3;
+  // makes sure choicePosition does not go out of range
+  if (editMode === true && choicePosition > 3) choicePosition = 0;
+  if (cursorPosition === 0) selectedObject["frameChoice"] = choicePosition;
+  // let batteryChoice = selectedObject["Bat Mod"][selectedObject["frameChoice"]];
+  let cursor = [" ", " ", " "];
+  let arrowCursor = [" ", " ", " "];
+  if (includeCursor) {
+    switch (cursorPosition) {
+      case 0:
+        returnDisable = false;
+        preEditMode = true; // probably put to false under escape
+        editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
+        escapeDisable = false;
+        break;
+      case 1:
+        returnDisable = false;
+        preEditMode = false; // probably put to false under escape
+        editMode = false;
+        cursor[1] = ">";
+        escapeDisable = false;
+        break;
+      case 2:
+        returnDisable = false;
+        preEditMode = false;
+        editMode = false;
+        cursor[2] = ">";
+        escapeDisable = false;
+        break;
+    }
+  }
+  console.log("Seting Status: Normal to level " + choicePosition);
+  data["Status: Normal"].level = choicePosition + 1;
+
+  let onScreen = "";
+  if (editMode) {
+    onScreen = "Input Contact:" + arrowCursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
+  } else {
+    onScreen = "Input Contact:" + cursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
+  }
+  onScreen += "User Contact " + (choicePosition + 1) + "\n";
+
+  onScreen += cursor[1] + "Status: Normal\n";
+  onScreen += cursor[2] + "Configuration";
+  return onScreen;
+}
+
 // provides functionality for the battery diagnostic tests
 function batMonChooserScreen(includeCursor) {
   if (debugMode) console.log("Function: batMonChooserScreen(" + includeCursor + ")");
@@ -774,11 +845,11 @@ function batMonChooserScreen(includeCursor) {
         break;
     }
   }
-  let location = menus["XR1"]["batteries"][choicePosition + 1]["loc"];
+  let location = data["XR1"]["batteries"][choicePosition + 1]["loc"];
   let onScreen = cursor[0] + "Frame:" + arrowCursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
   if (batteryChoice !== "NONE") {
     onScreen += cursor[1] + "Bat Mod:" + arrowCursor[1] + choicePosition + batteryChoice + " " + location + "\n";
-    onScreen += cursor[2] + "Status:" + " " + menus["XR1"]["batteries"][choicePosition + 1]["Status"] + "\n";
+    onScreen += cursor[2] + "Status:" + " " + data["XR1"]["batteries"][choicePosition + 1]["Status"] + "\n";
   } else {
     onScreen += cursor[1] + "Bat Mod:" + " " + batteryChoice + "\n";
     onScreen += cursor[2] + "Status:" + " Not Valid\n";
@@ -800,10 +871,10 @@ function dataFedScreen() {
   if (debugMode) console.log("Function: dataFedScreen()");
   let onScreen = "\nNo Data To Show";
   let dataMenu = selectedObject["menu"][cursorPosition][1];
-  let i = menus[dataMenu]["input"];
-  let b = menus[dataMenu]["bypass"];
-  let o = menus[dataMenu]["output"];
-  let p = menus[dataMenu]["opk"];
+  let i = data[dataMenu]["input"];
+  let b = data[dataMenu]["bypass"];
+  let o = data[dataMenu]["output"];
+  let p = data[dataMenu]["opk"];
   switch (dataMenu) {
     case "VoltageData":
       onScreen = "L Vin   Vbyp  Vout   ^\n";
@@ -1007,30 +1078,30 @@ function setMenu(menuName, level) {
     // record new menuLevel to array
     lastMenu[menuLevel] = menuName;
     // how many elements are in our current Menu
-    menuSize = Object.keys(menus[menuName]["menu"]).length;
+    menuSize = Object.keys(data[menuName]["menu"]).length;
     isScrollDownMenu = isAScrollDownMenu(menuName);
     // point to current menu
-    selectedObject = menus[menuName];
+    selectedObject = data[menuName];
     // does this object have settings info?
-    if (menus[menuName] && menus[menuName].settings) {
+    if (data[menuName] && data[menuName].settings) {
       // alternate?
-      if (menus[menuName].settings.alternate) {
+      if (data[menuName].settings.alternate) {
         startAlternating();
         console.log("function: setMenu() alternating: started");
       } else console.log("function: setMenu() alternating: not started");
       // we have gone to a deeper level
       if (menuLevel > lastMenuLevel) {
         // save cursor position for last menu
-        menus[lastMenu[lastMenuLevel]].settings.lastCursorPosition = cursorPosition;
+        data[lastMenu[lastMenuLevel]].settings.lastCursorPosition = cursorPosition;
         console.log("(if) function: setMenu() previous screen cursor position: set to " + cursorPosition);
         // new menu must start fresh
         cursorPosition = 0;
       } else if (menuLevel < lastMenuLevel) {
-        cursorPosition = menus[menuName].settings.lastCursorPosition;
+        cursorPosition = data[menuName].settings.lastCursorPosition;
         console.log("menuname: " + menuName);
         console.log("(else if) function: setMenu() previous screen cursor position: set to " + cursorPosition);
       } else {
-        menus[menuName].settings.lastCursorPosition = 0;
+        data[menuName].settings.lastCursorPosition = 0;
         cursorPosition = 0;
         console.log("(else) function: setMenu() cursor position: reset to 0");
       }

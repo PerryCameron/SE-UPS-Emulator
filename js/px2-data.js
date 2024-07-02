@@ -1,4 +1,4 @@
-let menus = {
+let data = {
   Default: {
     type: "information",
     menu: {
@@ -163,7 +163,7 @@ let menus = {
     },
   },
   Environment: {
-    type: "scroll-down",
+    type: "four-scroll",
     menu: {
       0: "Input Contacts",
       1: "Output Relays",
@@ -303,6 +303,62 @@ let menus = {
     batteryChoice: "0",
     module: "0",
   },
+
+  "Input Contacts": {
+    type: "input-contacts-chooser",
+    flag: "pre",
+    menu: {
+      0: "Input Contact:",
+      1: "Status: Normal",
+      2: "Configuration",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+    frame: {
+      0: "1of4",
+      1: "2of4",
+      2: "3of4",
+      3: "4of4",
+    },
+    normal: {
+      0: "Open",
+      1: "Closed",
+    },
+    Severity: {
+      0: "Critical",
+      1: "Warning",
+    },
+    Alarms: {
+      0: "Enabled",
+      1: "Disabled",
+    },
+    frameChoice: "0",
+    Status: {
+      0: { normal: "0", severity: "0", alarms: "0" },
+      1: { normal: "1", severity: "1", alarms: "0" },
+      2: { normal: "0", severity: "1", alarms: "1" },
+      3: { normal: "0", severity: "0", alarms: "0" },
+    },
+    module: "0",
+  },
+
+  "Status: Normal": {
+    type: "status-normal-view",
+    menu: {
+      0: "User Contact",
+      1: "Status:",
+      2: "Normal:",
+      3: "State:",
+    },
+    level: 2,
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+  },
+
   XR1: {
     batteries: {
       0: { sn: "", loc: "L1A", Status: "Not Installed" },
