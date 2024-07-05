@@ -322,7 +322,7 @@ let data = {
       2: "3of4",
       3: "4of4",
     },
-    normal: {
+    contact: {
       0: "Open",
       1: "Closed",
     },
@@ -336,10 +336,10 @@ let data = {
     },
     frameChoice: "0",
     Status: {
-      0: { normal: "0", severity: "0", alarms: "0" },
-      1: { normal: "1", severity: "1", alarms: "0" },
-      2: { normal: "0", severity: "1", alarms: "1" },
-      3: { normal: "0", severity: "0", alarms: "0" },
+      0: { normal: "0", severity: "0", alarms: "0", state: "0" },
+      1: { normal: "1", severity: "1", alarms: "0", state: "1" },
+      2: { normal: "0", severity: "1", alarms: "1", state: "0" },
+      3: { normal: "0", severity: "0", alarms: "0", state: "1" },
     },
     module: "0",
   },
@@ -351,6 +351,21 @@ let data = {
       1: "Status:",
       2: "Normal:",
       3: "State:",
+    },
+    level: 2,
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+  },
+
+  Configuration: {
+    type: "input-contacts-configure",
+    menu: {
+      0: "Name/Location 1",
+      1: "Alarms:",
+      2: "Severity:",
+      3: "Normal:",
     },
     level: 2,
     settings: {

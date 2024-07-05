@@ -141,7 +141,6 @@ function drawScreen(includeCursor) {
       return rawStatusDataScreen();
     case "bat-mon-chooser":
       return batMonChooserScreen(includeCursor);
-
     case "mode-switch-menu-item":
       return modeSwitchMenuItemScreen(includeCursor);
     case "four-scroll":
@@ -166,7 +165,8 @@ function drawScreen(includeCursor) {
       return statusNormalView();
     case "input-contacts-chooser":
       return inputContactChooserScreen(includeCursor);
-
+    case "input-contacts-configure":
+      return inputContactConfigureScreen(includeCursor);
     default:
       return scrollDownScreen(includeCursor);
   }
@@ -489,15 +489,14 @@ function manufactureDataScreen() {
 
 function statusNormalView() {
   if (debugMode) console.log("Function: statusNormalView()");
-  // 0: "User Contact",
-  // 1: "Status:",
-  // 2: "Normal:",
-  // 3: "State:",
   let level = data["Status: Normal"].level;
   selectedObject["menu"][0] = "User Contact " + level;
   selectedObject["menu"][1] = "Status: Normal";
-  selectedObject["menu"][2] = "Normal: " + data["Input Contacts"]["normal"][level]; // data["Input Contacts"]
-  selectedObject["menu"][3] = "State: Open";
+  let normalState = data["Input Contacts"]["Status"][level]["normal"];
+  let currentState = data["Input Contacts"]["Status"][level]["state"];
+  data["Input Contacts"]["contact"];
+  selectedObject["menu"][2] = "Normal: " + data["Input Contacts"]["contact"][normalState]; // data["Input Contacts"]
+  selectedObject["menu"][3] = "State: " + data["Input Contacts"]["contact"][currentState];
   onScreen = printSimpleScreen(selectedObject.menu);
   return onScreen;
 }
@@ -762,6 +761,56 @@ function moduleChooserScreen(includeCursor) {
   return onScreen;
 }
 
+// provides functionality to set Input Contact settings
+function inputContactConfigureScreen(includeCursor) {
+  if (debugMode) console.log("Function: inputContactConfigureScreen(" + includeCursor + ")");
+  menuSize = 4;
+  // makes sure choicePosition does not go out of range
+  if (editMode === true && choicePosition > 4) choicePosition = 0;
+  if (cursorPosition === 0) selectedObject["frameChoice"] = choicePosition;
+  let cursor = [" ", " ", " ", " "];
+  let arrowCursor = [" ", " ", " ", " "];
+  if (includeCursor) {
+    switch (cursorPosition) {
+      case 0:
+        returnDisable = false;
+        preEditMode = false;
+        editMode = false;
+        cursor[0] = ">";
+        escapeDisable = false;
+        break;
+      case 1:
+        returnDisable = false;
+        preEditMode = true; // probably put to false under escape
+        editMode ? (arrowCursor[1] = "}") : (cursor[1] = ">");
+        escapeDisable = false;
+        break;
+      case 2:
+        returnDisable = false;
+        preEditMode = true; // probably put to false under escape
+        editMode ? (arrowCursor[2] = "}") : (cursor[2] = ">");
+        escapeDisable = false;
+        break;
+      case 3:
+        returnDisable = false;
+        preEditMode = true; // probably put to false under escape
+        editMode ? (arrowCursor[3] = "}") : (cursor[3] = ">");
+        escapeDisable = false;
+        break;
+    }
+  }
+  let onScreen = cursor[0] + "Name/Location " + data["Status: Normal"].level + "\n";
+  // if (editMode) {
+  //   onScreen = "Input Contact:" + arrowCursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
+  // } else {
+  //   onScreen = "Input Contact:" + cursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
+  // }
+  onScreen += cursor[1] + "Alarms:" + arrowCursor[1] + "\n";
+  onScreen += cursor[2] + "Severity:" + arrowCursor[2] + "\n";
+  onScreen += cursor[3] + "Normal:" + arrowCursor[3];
+  return onScreen;
+}
+
 // provides functionality for the Input Contact settings
 function inputContactChooserScreen(includeCursor) {
   if (debugMode) console.log("Function: inputContactChooserScreen(" + includeCursor + ")");
@@ -769,7 +818,6 @@ function inputContactChooserScreen(includeCursor) {
   // makes sure choicePosition does not go out of range
   if (editMode === true && choicePosition > 3) choicePosition = 0;
   if (cursorPosition === 0) selectedObject["frameChoice"] = choicePosition;
-  // let batteryChoice = selectedObject["Bat Mod"][selectedObject["frameChoice"]];
   let cursor = [" ", " ", " "];
   let arrowCursor = [" ", " ", " "];
   if (includeCursor) {
@@ -796,7 +844,6 @@ function inputContactChooserScreen(includeCursor) {
         break;
     }
   }
-  console.log("Seting Status: Normal to level " + choicePosition);
   data["Status: Normal"].level = choicePosition + 1;
 
   let onScreen = "";
