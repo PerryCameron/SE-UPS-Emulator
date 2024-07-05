@@ -1,0 +1,1 @@
+setChoicePositionLimits(1, 4);  < for setting choicePosition limits

@@ -306,7 +306,7 @@ let data = {
 
   "Input Contacts": {
     type: "input-contacts-chooser",
-    flag: "pre",
+    flag: "pre", // This is important for selection cursors to work on all alternations
     menu: {
       0: "Input Contact:",
       1: "Status: Normal",
@@ -334,18 +334,19 @@ let data = {
       0: "Enabled",
       1: "Disabled",
     },
-    frameChoice: "0",
     Status: {
       0: { normal: "0", severity: "0", alarms: "0", state: "0" },
       1: { normal: "1", severity: "1", alarms: "0", state: "1" },
       2: { normal: "0", severity: "1", alarms: "1", state: "0" },
       3: { normal: "0", severity: "0", alarms: "0", state: "1" },
     },
+    frameChoice: "0",
     module: "0",
   },
 
   "Status: Normal": {
     type: "status-normal-view",
+    flag: "pre", // This is important for selection cursors to work on all alternations
     menu: {
       0: "User Contact",
       1: "Status:",
@@ -361,6 +362,7 @@ let data = {
 
   Configuration: {
     type: "input-contacts-configure",
+    flag: "pre", // This is important for selection cursors to work on all alternations
     menu: {
       0: "Name/Location 1",
       1: "Alarms:",

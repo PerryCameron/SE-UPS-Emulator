@@ -538,7 +538,7 @@ function configurationBypassScreen(includeCursor) {
   return onScreen;
 }
 
-// provides funtionality for UPS Configuration > Output
+// provides funtionality for UPS > UPS Configuration > Output
 function configurationOutputScreen(includeCursor) {
   if (debugMode) console.log("Function: configurationAlarmScreen(" + includeCursor + ")");
   menuSize = 3;
@@ -761,53 +761,45 @@ function moduleChooserScreen(includeCursor) {
   return onScreen;
 }
 
-// provides functionality to set Input Contact settings
+// provides functionality to set Input Contact configuration
 function inputContactConfigureScreen(includeCursor) {
   if (debugMode) console.log("Function: inputContactConfigureScreen(" + includeCursor + ")");
   menuSize = 4;
-  // makes sure choicePosition does not go out of range
-  if (editMode === true && choicePosition > 4) choicePosition = 0;
-  if (cursorPosition === 0) selectedObject["frameChoice"] = choicePosition;
   let cursor = [" ", " ", " ", " "];
   let arrowCursor = [" ", " ", " ", " "];
+  let level = data["Status: Normal"].level;
   if (includeCursor) {
     switch (cursorPosition) {
       case 0:
-        returnDisable = false;
-        preEditMode = false;
-        editMode = false;
-        cursor[0] = ">";
-        escapeDisable = false;
+        cursor[0] = selectableChoice();
         break;
       case 1:
-        returnDisable = false;
-        preEditMode = true; // probably put to false under escape
+        setChoicePositionLimits(0, 1);
+        editableChoice();
         editMode ? (arrowCursor[1] = "}") : (cursor[1] = ">");
-        escapeDisable = false;
+        if (editMode) data["Input Contacts"]["Status"][level]["alarms"] = choicePosition;
         break;
       case 2:
-        returnDisable = false;
-        preEditMode = true; // probably put to false under escape
+        setChoicePositionLimits(0, 1);
+        editableChoice();
         editMode ? (arrowCursor[2] = "}") : (cursor[2] = ">");
-        escapeDisable = false;
+        if (editMode) data["Input Contacts"]["Status"][level]["severity"] = choicePosition;
         break;
       case 3:
-        returnDisable = false;
-        preEditMode = true; // probably put to false under escape
+        setChoicePositionLimits(0, 1);
+        editableChoice();
         editMode ? (arrowCursor[3] = "}") : (cursor[3] = ">");
-        escapeDisable = false;
+        if (editMode) data["Input Contacts"]["Status"][level]["normal"] = choicePosition;
         break;
     }
   }
-  let onScreen = cursor[0] + "Name/Location " + data["Status: Normal"].level + "\n";
-  // if (editMode) {
-  //   onScreen = "Input Contact:" + arrowCursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
-  // } else {
-  //   onScreen = "Input Contact:" + cursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
-  // }
-  onScreen += cursor[1] + "Alarms:" + arrowCursor[1] + "\n";
-  onScreen += cursor[2] + "Severity:" + arrowCursor[2] + "\n";
-  onScreen += cursor[3] + "Normal:" + arrowCursor[3];
+  let onScreen = cursor[0] + "Name/Location " + level + "\n";
+  let alarmLevel = data["Input Contacts"]["Status"][level]["alarms"];
+  let severityLevel = data["Input Contacts"]["Status"][level]["severity"];
+  let normalLevel = data["Input Contacts"]["Status"][level]["normal"];
+  onScreen += cursor[1] + "Alarms:" + arrowCursor[1] + data["Input Contacts"]["Alarms"][alarmLevel] + "\n";
+  onScreen += cursor[2] + "Severity:" + arrowCursor[2] + data["Input Contacts"]["Severity"][severityLevel] + "\n";
+  onScreen += cursor[3] + "Normal:" + arrowCursor[3] + data["Input Contacts"]["contact"][normalLevel];
   return onScreen;
 }
 
@@ -823,24 +815,14 @@ function inputContactChooserScreen(includeCursor) {
   if (includeCursor) {
     switch (cursorPosition) {
       case 0:
-        returnDisable = false;
-        preEditMode = true; // probably put to false under escape
+        editableChoice();
         editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
-        escapeDisable = false;
         break;
       case 1:
-        returnDisable = false;
-        preEditMode = false; // probably put to false under escape
-        editMode = false;
-        cursor[1] = ">";
-        escapeDisable = false;
+        cursor[1] = selectableChoice();
         break;
       case 2:
-        returnDisable = false;
-        preEditMode = false;
-        editMode = false;
-        cursor[2] = ">";
-        escapeDisable = false;
+        cursor[2] = selectableChoice();
         break;
     }
   }
@@ -853,10 +835,23 @@ function inputContactChooserScreen(includeCursor) {
     onScreen = "Input Contact:" + cursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
   }
   onScreen += "User Contact " + (choicePosition + 1) + "\n";
-
   onScreen += cursor[1] + "Status: Normal\n";
   onScreen += cursor[2] + "Configuration";
   return onScreen;
+}
+
+function editableChoice() {
+  returnDisable = false;
+  preEditMode = true; // probably put to false under escape
+  escapeDisable = false;
+}
+
+function selectableChoice() {
+  returnDisable = false;
+  preEditMode = false; // probably put to false under escape
+  editMode = false;
+  escapeDisable = false;
+  return ">";
 }
 
 // provides functionality for the battery diagnostic tests
@@ -872,16 +867,12 @@ function batMonChooserScreen(includeCursor) {
   if (includeCursor) {
     switch (cursorPosition) {
       case 0:
-        returnDisable = false;
-        preEditMode = true; // probably put to false under escape
+        editableChoice();
         editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
-        escapeDisable = false;
         break;
       case 1:
-        returnDisable = false;
-        preEditMode = true; // probably put to false under escape
+        editableChoice();
         editMode ? (arrowCursor[1] = "}") : (cursor[1] = ">");
-        escapeDisable = false;
         break;
       case 2:
         returnDisable = true;
