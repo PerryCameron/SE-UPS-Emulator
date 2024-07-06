@@ -34,3 +34,5 @@ chooseConfiguration(includeCursor) <- beggining of doing this.
 1: top-menu
 2: Switchgear
 3: Factory
+
+// can simplify cursor[0] and arrowCursor[0] by getting rid of arrowCursor

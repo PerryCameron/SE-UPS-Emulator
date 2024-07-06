@@ -771,15 +771,14 @@ function moduleChooserScreen(includeCursor) {
 function outputRelayChooserScreen(includeCursor) {
   if (debugMode) console.log("Function: outputRelayChooserScreen(" + includeCursor + ")");
   menuSize = 2;
-  let cursor = [" ", " ", " "];
-  let arrowCursor = [" ", " ", " "];
+  let cursor = [" ", " "];
   if (cursorPosition === 0) selectedObject["frameChoice"] = choicePosition;
   if (includeCursor) {
     switch (cursorPosition) {
       case 0:
         editableChoice();
         setChoicePositionLimits(0, 3);
-        editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
+        editMode ? (cursor[0] = "}") : (cursor[0] = ">");
         if (editMode) data["Output Relays"]["frameChoice"] = choicePosition;
         break;
       case 1:
@@ -790,10 +789,7 @@ function outputRelayChooserScreen(includeCursor) {
         break;
     }
   }
-  data["Status: Normal"].level = choicePosition + 1;
-  let currentCursor = cursor[0];
-  if (editMode) currentCursor = arrowCursor[0];
-  let onScreen = "Output Relay:" + currentCursor + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
+  let onScreen = "Output Relay:" + cursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
   onScreen += "User Contact " + (choicePosition + 1) + "\n";
   onScreen += "Status: " + selectedObject["contact"][selectedObject["Status"][choicePosition]["state"]] + "\n";
   onScreen += cursor[1] + "Configuration";
@@ -806,7 +802,7 @@ function inputContactConfigureScreen(includeCursor) {
   menuSize = 4;
   let cursor = [" ", " ", " ", " "];
   let arrowCursor = [" ", " ", " ", " "];
-  let level = data["Status: Normal"].level;
+  let level = parseInt(data["Input Contacts"]["frameChoice"]) + 1;
   if (includeCursor) {
     switch (cursorPosition) {
       case 0:
@@ -847,15 +843,14 @@ function inputContactChooserScreen(includeCursor) {
   if (debugMode) console.log("Function: inputContactChooserScreen(" + includeCursor + ")");
   menuSize = 3;
   // makes sure choicePosition does not go out of range
-  if (editMode === true && choicePosition > 3) choicePosition = 0;
-  if (cursorPosition === 0) selectedObject["frameChoice"] = choicePosition;
   let cursor = [" ", " ", " "];
-  let arrowCursor = [" ", " ", " "];
   if (includeCursor) {
     switch (cursorPosition) {
       case 0:
+        setChoicePositionLimits(0, 3);
         editableChoice();
-        editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
+        editMode ? (cursor[0] = "}") : (cursor[0] = ">");
+        if (editMode) data["Input Contacts"]["frameChoice"] = choicePosition;
         break;
       case 1:
         cursor[1] = selectableChoice();
@@ -865,11 +860,8 @@ function inputContactChooserScreen(includeCursor) {
         break;
     }
   }
-  data["Status: Normal"].level = choicePosition + 1;
-  let currentCursor = cursor[0];
-  if (editMode) currentCursor = arrowCursor[0];
-  let onScreen = "Input Contact:" + currentCursor + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
-  onScreen += "User Contact " + (choicePosition + 1) + "\n";
+  let onScreen = "Input Contact:" + cursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
+  onScreen += "User Contact " + (parseInt(selectedObject["frameChoice"]) + 1) + "\n";
   onScreen += cursor[1] + "Status: Normal\n";
   onScreen += cursor[2] + "Configuration";
   return onScreen;
