@@ -1,1 +1,36 @@
+// Tricks to know
+
 setChoicePositionLimits(1, 4);  < for setting choicePosition limits
+
+// inside data file
+flag: "pre", // This is important for selection cursors to work on all alternations
+
+// how to select different menus with same screen look at additionalInfoScreen()
+// you make a function that sends you somewhere else determined by last menu item.
+
+
+// LEFT LAST Time programming
+0: Default
+1: top-menu
+2: Environment
+3: Output Relays
+- Need to set up Configuration screen to work, Input Contacts also has that so am going to have to create a condition
+see additionalInfoScreen() to see how to do it
+
+chooseConfiguration(includeCursor) <- beggining of doing this.
+
+// TO DO
+
+// this screen needs work
+0: Default
+1: top-menu
+2: Environment
+3: Input Contacts
+4: Configuration
+5: Name/Location 1
+
+// screen not yet completed
+0: Default
+1: top-menu
+2: Switchgear
+3: Factory

@@ -165,13 +165,19 @@ function drawScreen(includeCursor) {
       return statusNormalView();
     case "input-contacts-chooser":
       return inputContactChooserScreen(includeCursor);
-    case "input-contacts-configure":
-      return inputContactConfigureScreen(includeCursor);
+    case "configuration":
+      return chooseConfiguration(includeCursor);
+    case "output-relay-chooser":
+      return outputRelayChooserScreen(includeCursor);
     default:
       return scrollDownScreen(includeCursor);
   }
 }
 // this is a test
+
+function chooseConfiguration(includeCursor) {
+  if (lastMenu[3] === "Input Contacts") return inputContactConfigureScreen(includeCursor);
+}
 
 // debug function
 function printTestData() {
@@ -761,6 +767,39 @@ function moduleChooserScreen(includeCursor) {
   return onScreen;
 }
 
+// provides functionality for the Input Contact settings
+function outputRelayChooserScreen(includeCursor) {
+  if (debugMode) console.log("Function: outputRelayChooserScreen(" + includeCursor + ")");
+  menuSize = 2;
+  let cursor = [" ", " ", " "];
+  let arrowCursor = [" ", " ", " "];
+  if (cursorPosition === 0) selectedObject["frameChoice"] = choicePosition;
+  if (includeCursor) {
+    switch (cursorPosition) {
+      case 0:
+        editableChoice();
+        setChoicePositionLimits(0, 3);
+        editMode ? (arrowCursor[0] = "}") : (cursor[0] = ">");
+        if (editMode) data["Output Relays"]["frameChoice"] = choicePosition;
+        break;
+      case 1:
+        cursor[1] = selectableChoice();
+        break;
+      case 2:
+        cursor[2] = selectableChoice();
+        break;
+    }
+  }
+  data["Status: Normal"].level = choicePosition + 1;
+  let currentCursor = cursor[0];
+  if (editMode) currentCursor = arrowCursor[0];
+  let onScreen = "Output Relay:" + currentCursor + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
+  onScreen += "User Contact " + (choicePosition + 1) + "\n";
+  onScreen += "Status: " + selectedObject["contact"][selectedObject["Status"][choicePosition]["state"]] + "\n";
+  onScreen += cursor[1] + "Configuration";
+  return onScreen;
+}
+
 // provides functionality to set Input Contact configuration
 function inputContactConfigureScreen(includeCursor) {
   if (debugMode) console.log("Function: inputContactConfigureScreen(" + includeCursor + ")");
@@ -827,13 +866,9 @@ function inputContactChooserScreen(includeCursor) {
     }
   }
   data["Status: Normal"].level = choicePosition + 1;
-
-  let onScreen = "";
-  if (editMode) {
-    onScreen = "Input Contact:" + arrowCursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
-  } else {
-    onScreen = "Input Contact:" + cursor[0] + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
-  }
+  let currentCursor = cursor[0];
+  if (editMode) currentCursor = arrowCursor[0];
+  let onScreen = "Input Contact:" + currentCursor + selectedObject["frame"][selectedObject["frameChoice"]] + "\n";
   onScreen += "User Contact " + (choicePosition + 1) + "\n";
   onScreen += cursor[1] + "Status: Normal\n";
   onScreen += cursor[2] + "Configuration";

@@ -344,6 +344,46 @@ let data = {
     module: "0",
   },
 
+  "Output Relays": {
+    type: "output-relay-chooser",
+    flag: "pre", // This is important for selection cursors to work on all alternations
+    menu: {
+      0: "Input Contact:",
+      1: "Status: Normal",
+      2: "Configuration",
+    },
+    settings: {
+      alternate: true,
+      lastCursorPosition: 0,
+    },
+    frame: {
+      0: "1of4",
+      1: "2of4",
+      2: "3of4",
+      3: "4of4",
+    },
+    contact: {
+      0: "Open",
+      1: "Closed",
+    },
+    Severity: {
+      0: "Critical",
+      1: "Warning",
+    },
+    Alarms: {
+      0: "Enabled",
+      1: "Disabled",
+    },
+    Status: {
+      0: { normal: "0", severity: "0", alarms: "0", state: "0" },
+      1: { normal: "1", severity: "1", alarms: "0", state: "1" },
+      2: { normal: "0", severity: "1", alarms: "1", state: "0" },
+      3: { normal: "0", severity: "0", alarms: "0", state: "1" },
+    },
+    frameChoice: "0",
+    module: "0",
+  },
+
   "Status: Normal": {
     type: "status-normal-view",
     flag: "pre", // This is important for selection cursors to work on all alternations
@@ -360,8 +400,48 @@ let data = {
     },
   },
 
+  "Name/Location 1": {
+    type: "print-simple-screen",
+    menu: {
+      0: " Contact 1 Name:",
+      1: "User Contact 1",
+      2: " Location:",
+      3: "Location 1",
+    },
+  },
+
+  "Name/Location 2": {
+    type: "print-simple-screen",
+    menu: {
+      0: " Contact 2 Name:",
+      1: "User Contact 2",
+      2: " Location:",
+      3: "Location 2",
+    },
+  },
+
+  "Name/Location 3": {
+    type: "print-simple-screen",
+    menu: {
+      0: " Contact 3 Name:",
+      1: "User Contact 3",
+      2: " Location:",
+      3: "Location 3",
+    },
+  },
+
+  "Name/Location 4": {
+    type: "print-simple-screen",
+    menu: {
+      0: " Contact 4 Name:",
+      1: "User Contact 4",
+      2: " Location:",
+      3: "Location 4",
+    },
+  },
+
   Configuration: {
-    type: "input-contacts-configure",
+    type: "configuration",
     flag: "pre", // This is important for selection cursors to work on all alternations
     menu: {
       0: "Name/Location 1",
