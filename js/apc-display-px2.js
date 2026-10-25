@@ -1229,7 +1229,7 @@ function playBeep() {
 
 function updateScreen(imageIndex) {
   if (debugMode) console.log("Function: updateScreen(imageIndex)");
-  const basePath = "/../images/dots";
+  const basePath = "./images/dots";
   const container = document.getElementById("viewscreen-div");
   container.innerHTML = "";
   if (imageIndex === 6) {

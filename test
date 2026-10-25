@@ -1,0 +1,41 @@
+<div class="tab-content-div white-tab" id="tab-content-storage-229" style="display: flex">
+  <slip-component class="slip-storage" id="slip-widget-1"
+    ><div class="slip-graphic" data-current-slip-name="C43">
+      <div class="slip-label">
+        <span class="slip-label">Slip: </span>
+        <span class="slip-name">C43</span>
+      </div>
+      <img alt="Slip: C43" src="blob:http://192.168.1.87:8080/f96599ef-48c1-4751-8392-43d042323d73" />
+    </div>
+    <div class="slip-widget">
+      <div class="radio-container">
+        <label><input type="radio" name="action" value="sublease" checked="" /> Sublease Slip</label><br />
+        <label><input type="radio" name="action" value="reassign" /> Reassign Slip</label>
+      </div>
+      <div class="input-container" style="display: flex; gap: 5px">
+        <input type="text" placeholder="Membership ID" style="flex: 1 1 0%" /><button>Submit</button>
+      </div>
+    </div></slip-component
+  >
+</div>
+
+<div class="tab-content-div white-tab" id="tab-content-storage-282" style="display: flex">
+  <slip-component class="slip-storage" id="slip-widget-11"
+    ><div class="slip-graphic" data-current-slip-name="C39">
+      <div class="slip-label">
+        <span class="slip-label">Slip: </span>
+        <span class="slip-name">C39</span>
+      </div>
+      <img alt="Slip: C39" src="blob:http://192.168.1.87:8080/cce79fa2-6adc-470d-ad8e-88c773f40d1d" />
+    </div>
+    <div class="slip-widget">
+      <div class="radio-container">
+        <label><input type="radio" name="action" value="sublease" checked="" /> Sublease Slip</label><br />
+        <label><input type="radio" name="action" value="reassign" /> Reassign Slip</label>
+      </div>
+      <div class="input-container" style="display: flex; gap: 5px">
+        <input type="text" placeholder="Membership ID" style="flex: 1 1 0%" /><button>Submit</button>
+      </div>
+    </div></slip-component
+  >
+</div>
