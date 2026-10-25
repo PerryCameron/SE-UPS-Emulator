@@ -53,7 +53,7 @@ The PX Emulator provides a virtual UPS display that can be used to:
 
 Current support includes:
 
-- Symmetra PX 250/500 (PX1)
+- Symmetra PX1
 - Symmetra PX2
 
 Additional UPS platforms may be added in future releases.
